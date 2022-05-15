@@ -3,9 +3,7 @@ package pl.team.marking.projectjavaweb.entity;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -24,5 +22,7 @@ public class AppUser {
     private String password;
     @Column(name = "age", nullable = false)
     private int age;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Role role;
 
 }
