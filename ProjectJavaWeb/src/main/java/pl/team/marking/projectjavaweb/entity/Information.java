@@ -37,6 +37,11 @@ public class Information {
 
     @Column(name = "remind_date")
     private LocalDateTime remindDate;
-    
+
+    @ManyToOne
+    @JoinColumn(
+            referencedColumnName = "category_id"
+    )
+    private Category category;
 
 }
