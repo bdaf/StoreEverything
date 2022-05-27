@@ -7,10 +7,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class MainController {
 
-    @RequestMapping("/index")
+    @GetMapping("/index")
     public String getMainPage() {
         System.out.println("WYWOLANIE");
         return "start";
+    }
+
+    @GetMapping("/logged")
+    public String getLoggedPage() {
+        System.out.println("WYWOLANIE");
+        return "logged";
     }
 
 }

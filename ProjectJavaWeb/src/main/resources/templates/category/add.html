@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<nav th:replace="partials/beforeBody.html"></nav>
 <head>
-    <meta charset="UTF-8">
     <title>Category</title>
 </head>
-<body>
-
 <form name="myForm" action="#" th:action="@{/categories/add_post}" method="post">
     <label>Name</label> <input type="text" th:field="*{category.name}" name="name"><br/>
     <button type="reset">Reset</button>
     <button type="submit">Save</button>
 </form>
-</body>
-</html>
+<nav th:replace="partials/afterBody.html"></nav>
