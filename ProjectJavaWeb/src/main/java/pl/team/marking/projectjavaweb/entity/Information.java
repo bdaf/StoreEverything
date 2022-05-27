@@ -1,6 +1,8 @@
 package pl.team.marking.projectjavaweb.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -8,6 +10,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Table(name = "information")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Information {
 
     @Id

@@ -1,18 +1,31 @@
 package pl.team.marking.projectjavaweb.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 
 @Entity
 @Data
-public class AppUser {
-    private static final String LIMITED_USER = "LIMITED_USER";
-    private static final String FULL_USER = "FULL_USER";
-    private static final String ADMIN = "ADMIN";
+@Table(name = "user_app")
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserApp {
+    public static final String LIMITED_USER = "LIMITED_USER";
+    public static final String FULL_USER = "FULL_USER";
+    public static final String ADMIN = "ADMIN";
 
     @Id
+    @SequenceGenerator(
+            name = "user_sequence",
+            sequenceName = "user_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
+    private Long id;
+
     @Length(min = 3,max = 20, message = "Login musi mieć od 3 do 20 znaków")
     @Column(name = "login", nullable = false)
     // TODO login should always be lower cased!
@@ -38,4 +51,7 @@ public class AppUser {
 
     @Column(name = "role", nullable = false)
     private String role = LIMITED_USER;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
 }

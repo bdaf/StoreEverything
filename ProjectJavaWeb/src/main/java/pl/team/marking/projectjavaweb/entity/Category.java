@@ -9,6 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
+@Table(name = "category")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Category {
