@@ -1,7 +1,6 @@
 package pl.team.marking.projectjavaweb.controller;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +14,11 @@ import pl.team.marking.projectjavaweb.repository.CategoryRepository;
 @RequestMapping("/categories")
 public class CategoryController {
 
-    @Autowired
-    CategoryRepository categoryRepository;
+    final CategoryRepository categoryRepository;
+
+    public CategoryController(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
     @GetMapping
     public String getCategories(Model model) {

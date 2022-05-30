@@ -33,12 +33,12 @@ public class UserApp {
 
     @Column(name = "name", nullable = false)
     @Length(min = 3,max = 20, message = "Imie musi mieć od 3 do 20 znaków")
-    // TODO First character in name should be upper cased
+    // TODO First character in name should be upper cased - regex
     private String name;
 
     @Column(name = "surname", nullable = false)
     @Length(min = 3,max = 50, message = "Nazwisko musi mieć od 3 do 50 znaków")
-    // TODO First character in surname should be upper cased
+    // TODO First character in surname should be upper cased - regex
     private String surname;
 
     @Column(name = "password", nullable = false)

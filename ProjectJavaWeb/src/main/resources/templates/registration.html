@@ -1,0 +1,48 @@
+<nav th:replace="partials/beforeBody.html"></nav>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Create HTML registration form -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+
+            <!-- success message -->
+            <div th:if="${param.success}">
+                <div class="alert alert-info">You've successfully registered
+                    to our awesome app!
+                </div>
+            </div>
+
+            <h1>Registration</h1>
+
+            <form th:action="@{/registration}" method="post" th:object="${user}">
+                <div class="form-group">
+                    <label class="control-label" for="name">Name </label>
+                    <input id="name" class="form-control" th:field="*{name}" required autofocus="autofocus"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="surname">Surname </label>
+                    <input id="surname" class="form-control" th:field="*{surname}" required autofocus="autofocus"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="age"> Age
+                    </label> <input id="age" class="form-control" th:field="*{age}" required autofocus="autofocus"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="password">Password</label>
+                    <input id="password" class="form-control" type="password" th:field="*{password}" required autofocus="autofocus"/>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                    <span>Already registered? <a href="/" th:href="@{/login}">Loginhere</a></span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<nav th:replace="partials/afterBody.html"></nav>

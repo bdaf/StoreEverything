@@ -1,26 +1,38 @@
-package pl.team.marking.projectjavaweb.security;
+package pl.team.marking.projectjavaweb.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.team.marking.projectjavaweb.entity.MyUserDetails;
 import pl.team.marking.projectjavaweb.entity.UserApp;
 import pl.team.marking.projectjavaweb.repository.UserRepository;
 
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
-public class MyUserDetailsService implements UserDetailsService {
+public class MyUserDetailsServiceImpl implements MyUserDetailsService {
 
-    @Autowired
-    UserRepository userRepository;
+    final UserRepository userRepository;
+
+    public MyUserDetailsServiceImpl(UserRepository userRepository) {
+        super();
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String aUsername) throws UsernameNotFoundException {
         Optional<UserApp> user = userRepository.findUserByLogin(aUsername);
         user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + aUsername));
         return user.map(MyUserDetails::new).get();
+    }
+
+    @Override
+    public void save(UserApp aUserApp) {
+        // Make login lowercase
+        aUserApp.setLogin(aUserApp.getLogin().toLowerCase(Locale.ROOT));
+        if(aUserApp.getAge() >= 18){
+            userRepository.save(aUserApp);
+        }
     }
 }
