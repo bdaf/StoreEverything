@@ -1,5 +1,6 @@
 package pl.team.marking.projectjavaweb.service;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,15 @@ public class MyUserDetailsServiceImpl implements MyUserDetailsService {
         Optional<UserApp> user = userRepository.findUserByLogin(aUsername);
         user.orElseThrow(() -> new UsernameNotFoundException("Not found: " + aUsername));
         return user.map(MyUserDetails::new).get();
+    }
+
+    @Override
+    public MyUserDetails getCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof MyUserDetails) {
+            return ((MyUserDetails)principal);
+        }
+        return null;
     }
 
     @Override
