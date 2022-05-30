@@ -7,7 +7,6 @@ import pl.team.marking.projectjavaweb.entity.MyUserDetails;
 import pl.team.marking.projectjavaweb.entity.UserApp;
 import pl.team.marking.projectjavaweb.repository.UserRepository;
 
-import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -29,7 +28,6 @@ public class MyUserDetailsServiceImpl implements MyUserDetailsService {
 
     @Override
     public void save(UserApp aUserApp) {
-        // Make login lowercase
-        aUserApp.setLogin(aUserApp.getLogin().toLowerCase(Locale.ROOT));
+        userRepository.save(aUserApp);
     }
 }
