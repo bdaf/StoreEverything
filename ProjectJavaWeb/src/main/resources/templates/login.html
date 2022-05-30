@@ -3,12 +3,23 @@
     <title>Login page</title>
 </head>
     <h1>Login page</h1>
-    <p th:if="${loginError}" class="error">Wrong user or password</p>
+    <p th:if="${loginError}" class="error" style="color: red">Wrong user or password</p>
     <form th:action="@{/login}" method="post">
-        <label for="username">Username</label>:
-        <input type="text" id="username" name="username" autofocus="autofocus" /> <br />
-        <label for="password">Password</label>:
-        <input type="password" id="password" name="password" /> <br />
-        <input type="submit" value="Log in" />
+        <div class="form-group">
+            <label class="control-label" for="login" >Login </label>
+            <input type="text" id="login" name="username" class="form-control" required autofocus="autofocus"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="password">Password</label>
+            <input id="password" class="form-control" type="password" name="password" required autofocus="autofocus"/>
+        </div>
+        <br>
+        <div class="form-group">
+            <input type="submit" class="btn btn-lg btn-secondary fw-bold border-white bg-white" value="Log in" /> <br><br>
+            <span>Don't have account? <a href="/" th:href="@{/registration}">Register here</a></span>
+        </div>
     </form>
 <nav th:replace="partials/afterBody.html"></nav>
+
+
+

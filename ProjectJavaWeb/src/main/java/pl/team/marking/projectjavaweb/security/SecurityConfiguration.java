@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import static pl.team.marking.projectjavaweb.entity.UserApp.*;
 
@@ -44,9 +45,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .failureUrl("/login-error")
-                .and()
-                .logout()
-                .logoutSuccessUrl("/index");
+                .and().logout()
+                .invalidateHttpSession(true).clearAuthentication(true)
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).
+                logoutSuccessUrl("/login?logout");
     }
 
     @Bean
