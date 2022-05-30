@@ -15,26 +15,31 @@
          <div class="form-group">
              <label class="default_padding control-label" for="login">Login </label>
              <input id="login" class="form-control" th:field="*{login}" required autofocus="autofocus"/>
+             <p th:if="${#fields.hasErrors('login')}" th:errorclass="error" th:class="error" th:errors="*{login}" />
          </div>
 
          <div class="form-group">
              <label class="default_padding control-label" for="name">Name </label>
              <input id="name" class="form-control" th:field="*{name}" required autofocus="autofocus"/>
+             <p th:if="${#fields.hasErrors('name')}" th:errorclass="error" th:class="error" th:errors="*{name}" />
          </div>
 
          <div class="form-group">
              <label class="default_padding control-label" for="surname">Surname </label>
              <input id="surname" class="form-control" th:field="*{surname}" required autofocus="autofocus"/>
+             <p th:if="${#fields.hasErrors('surname')}" th:errorclass="error" th:class="error" th:errors="*{surname}" />
          </div>
 
          <div class="form-group">
              <label class="default_padding control-label" for="age"> Age</label>
              <input id="age" type="number" class="form-control" th:field="*{age}" required autofocus="autofocus"/>
+             <p th:if="${#fields.hasErrors('age')}" th:errorclass="error" th:class="error" th:errors="*{age}" />
          </div>
 
          <div class="form-group">
              <label class="default_padding control-label" for="password">Password</label>
              <input id="password" class="form-control" type="password" th:field="*{password}" required autofocus="autofocus"/>
+             <p th:if="${#fields.hasErrors('password')}" th:errorclass="error" th:class="error" th:errors="*{password}" />
          </div><br>
 
          <div class="form-group">
