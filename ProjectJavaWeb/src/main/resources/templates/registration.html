@@ -13,27 +13,27 @@
 
      <form th:action="@{/registration}" method="post" th:object="${user}">
          <div class="form-group">
-             <label class="control-label" for="login">Login </label>
+             <label class="default_padding control-label" for="login">Login </label>
              <input id="login" class="form-control" th:field="*{login}" required autofocus="autofocus"/>
          </div>
 
          <div class="form-group">
-             <label class="control-label" for="name">Name </label>
+             <label class="default_padding control-label" for="name">Name </label>
              <input id="name" class="form-control" th:field="*{name}" required autofocus="autofocus"/>
          </div>
 
          <div class="form-group">
-             <label class="control-label" for="surname">Surname </label>
+             <label class="default_padding control-label" for="surname">Surname </label>
              <input id="surname" class="form-control" th:field="*{surname}" required autofocus="autofocus"/>
          </div>
 
          <div class="form-group">
-             <label class="control-label" for="age"> Age
-             </label> <input id="age" class="form-control" th:field="*{age}" required autofocus="autofocus"/>
+             <label class="default_padding control-label" for="age"> Age</label>
+             <input id="age" type="number" class="form-control" th:field="*{age}" required autofocus="autofocus"/>
          </div>
 
          <div class="form-group">
-             <label class="control-label" for="password">Password</label>
+             <label class="default_padding control-label" for="password">Password</label>
              <input id="password" class="form-control" type="password" th:field="*{password}" required autofocus="autofocus"/>
          </div><br>
 
@@ -42,5 +42,11 @@
              <span>Already registered? <a href="/" th:href="@{/login}">Log in here</a></span>
          </div>
      </form>
+
+    <style>
+        .default_padding{
+            padding: 10px;
+        }
+    </style>
 
 <nav th:replace="partials/afterBody.html"></nav>

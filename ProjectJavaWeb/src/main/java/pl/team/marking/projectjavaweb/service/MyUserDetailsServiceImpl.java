@@ -31,8 +31,5 @@ public class MyUserDetailsServiceImpl implements MyUserDetailsService {
     public void save(UserApp aUserApp) {
         // Make login lowercase
         aUserApp.setLogin(aUserApp.getLogin().toLowerCase(Locale.ROOT));
-        if(aUserApp.getAge() >= 18){
-            userRepository.save(aUserApp);
-        }
     }
 }

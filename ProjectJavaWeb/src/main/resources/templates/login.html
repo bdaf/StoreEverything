@@ -1,16 +1,16 @@
 <nav th:replace="partials/beforeBody.html"></nav>
 <head>
-    <title>Login page</title>
+    <title>Store everything - Login</title>
 </head>
-    <h1>Login page</h1>
+    <h1>Sign in page</h1>
     <p th:if="${loginError}" class="error" style="color: red">Wrong user or password</p>
     <form th:action="@{/login}" method="post">
         <div class="form-group">
-            <label class="control-label" for="login" >Login </label>
+            <label class="default_padding control-label" for="login" >Login </label>
             <input type="text" id="login" name="username" class="form-control" required autofocus="autofocus"/>
         </div>
         <div class="form-group">
-            <label class="control-label" for="password">Password</label>
+            <label class="default_padding control-label" for="password">Password</label>
             <input id="password" class="form-control" type="password" name="password" required autofocus="autofocus"/>
         </div>
         <br>
@@ -19,6 +19,12 @@
             <span>Don't have account? <a href="/" th:href="@{/registration}">Register here</a></span>
         </div>
     </form>
+
+    <style>
+        .default_padding{
+            padding: 10px;
+        }
+    </style>
 <nav th:replace="partials/afterBody.html"></nav>
 
 
