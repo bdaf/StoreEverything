@@ -65,7 +65,6 @@ public class InformationController {
         return "information/informations";
     }
 
-    // TODO
     @GetMapping("informations/share/{informationId}")
     public String getShareInformationDetails(@AuthenticationPrincipal MyUserDetails userDetails, Model model, @PathVariable Long informationId) {
         String login = userDetails.getUsername();
@@ -122,14 +121,32 @@ public class InformationController {
         return "redirect:/informations";
     }
 
+    @GetMapping("/update/{informationId}")
+    public String shareFormInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId, Model model) {
+        String login = userDetails.getUsername();
+        UserApp user = myUserDetailsService.getUserByLogin(login);
+
+        Optional<Information> information = informationRepository.findByInformationIdAndUser(informationId, user);
+        if (information.isEmpty())
+            return "redirect:/informations";
+        model.addAttribute("information", information.get());
+        return "information/information_edit";
+    }
+
     // TODO
-    @PutMapping("/{informationId}")
-    public String updateInformation(@PathVariable Long informationId, @ModelAttribute("information") Information information){
+    @PostMapping("/update/{informationId}")
+    public String updateInformation(@PathVariable Long informationId, @ModelAttribute("information") Information information) {
         return "redirect:/informations";
     }
 
+    // TODO
+    @PostMapping("/{informationId}/share")
+    public String shareInformation(@PathVariable Long informationId, @ModelAttribute("login") String login) {
+        return "redirect:/informations/update/" + informationId;
+    }
+
     @PostMapping("/delete/{informationId}")
-    public String deleteInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId){
+    public String deleteInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId) {
         String login = userDetails.getUsername();
         UserApp user = myUserDetailsService.getUserByLogin(login);
 

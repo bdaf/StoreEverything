@@ -14,7 +14,7 @@
         <p class="card-text" th:text="${'Share person: ' + information.getPublishedUser().size()}"></p>
         <hr/>
         <div th:if="${canEdited}">
-            <a th:href="${'/informations/'}" class="btn btn-primary">Edited</a>
+            <a th:href="${'/informations/update/' + information.getInformationId()}" class="btn btn-primary">Edited</a>
             <form action="#" th:action="${'/informations/delete/' + information.getInformationId()}" method="post">
                 <button class="btn btn-danger" type="submit" id="deleteButton">Delete</button>
             </form>
