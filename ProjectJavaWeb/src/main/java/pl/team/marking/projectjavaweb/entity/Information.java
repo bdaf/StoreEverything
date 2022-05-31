@@ -3,10 +3,14 @@ package pl.team.marking.projectjavaweb.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,22 +30,26 @@ public class Information {
     private Long informationId;
 
     @Column(name = "title", nullable = false)
-    @Length(min = 3, max = 20, message = "Tytuł musi mieć od 3 do 20 znaków")
+//    @Length(min = 3, max = 20, message = "Tytuł musi mieć od 3 do 20 znaków")
     private String title;
 
     @Column(name = "content", nullable = false)
-    @Length(min = 5, max = 500, message = "Zawartość musi mieć od 5 do 500 znaków")
+//    @Length(min = 5, max = 500, message = "Zawartość musi mieć od 5 do 500 znaków")
     private String content;
 
     @Column(name = "link")
     private String link;
 
+    @Column(name = "link_uuid")
+    private String linkUuid;
+
     // TODO format we want is 'dd-mm-yyyy'
     @Column(name = "adding_date")
-    private LocalDateTime addingDate;
+    @CreationTimestamp
+    private LocalDate addingDate;
 
     @Column(name = "remind_date")
-    private LocalDateTime remindDate;
+    private LocalDate remindDate;
 
     @ManyToOne
     @JoinColumn(
@@ -49,4 +57,12 @@ public class Information {
     )
     private Category category;
 
+    @ManyToOne
+    @JoinColumn(
+            referencedColumnName = "login"
+    )
+    private UserApp user;
+
+    @ManyToMany
+    private List<UserApp> publishedUser = new ArrayList<>();
 }

@@ -1,0 +1,25 @@
+<nav th:replace="partials/beforeBody.html"></nav>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<div class="card">
+    <div class="card-header" th:text="${information.getTitle() + ' ' + information.getAddingDate()}">
+    </div>
+    <div class="card-body">
+        <h6 class="card-title" th:text="${information.getUser().getName() + ' ' + information.getUser().getSurname()}"></h6>
+        <p th:text="${'Category: ' + information.getCategory().getName()}"></p>
+        <p class="card-text" th:text="${information.getContent()}"></p>
+        <p class="card-text" th:text="${'Remind date: ' + information.getRemindDate()}"></p>
+        <p class="card-text" th:text="${'Share link: ' + information.getLink()}"></p>
+        <p class="card-text" th:text="${'Share person: ' + information.getPublishedUser().size()}"></p>
+        <hr/>
+        <div th:if="${canEdited}">
+            <a th:href="${'/informations/'}" class="btn btn-primary">Edited</a>
+            <form action="#" th:action="${'/informations/delete/' + information.getInformationId()}" method="post">
+                <button class="btn btn-danger" type="submit" id="deleteButton">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<nav th:replace="partials/afterBody.html"></nav>

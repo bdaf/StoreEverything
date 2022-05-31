@@ -35,8 +35,11 @@ public class InformationController {
     private final CategoryRepository categoryRepository;
 
     @GetMapping
-    public String getAllMyInformation(Model model){
-        List<Information> informationList = informationRepository.findAll();
+    public String getAllMyInformation(@AuthenticationPrincipal MyUserDetails userDetails, Model model){
+        String login = userDetails.getUsername();
+        UserApp user = myUserDetailsService.getUserByLogin(login);
+
+        List<Information> informationList = informationRepository.findByUser(user);
         model.addAttribute("informations", informationList);
         return "information/informations";
     }
@@ -54,6 +57,7 @@ public class InformationController {
         return "information/information_details";
     }
 
+    // TODO
     @GetMapping("/share")
     public String getShareInformation(@AuthenticationPrincipal MyUserDetails userDetails, Model model){
         String login = userDetails.getUsername();
@@ -64,10 +68,13 @@ public class InformationController {
     }
 
     @GetMapping("/share/link/{uuid}")
-    public String getShareLinkInformation(@AuthenticationPrincipal MyUserDetails userDetails, Model model, @PathVariable String uuid){
-
+    public String getShareLinkInformation(Model model, @PathVariable String uuid){
+        Optional<Information> information = informationRepository.findByLinkUuid(uuid);
+        if(information.isEmpty())
+            return "redirect:/informations";
+        model.addAttribute("information", information.get());
         model.addAttribute("canEdited", false);
-        return "redirect:information/information_details?canEdited";
+        return "information/information_details";
     }
 
     @GetMapping("/add")
@@ -98,18 +105,25 @@ public class InformationController {
         information.setRemindDate(remindDate);
         String uuid = String.valueOf(UUID.randomUUID());
         information.setLink(BASIC_URL + uuid);
+        information.setLinkUuid(uuid);
 
         informationRepository.save(information);
         return "redirect:/informations";
     }
 
+    // TODO
     @PutMapping("/{informationId}")
     public String updateInformation(@PathVariable Long informationId, @ModelAttribute("information") Information information){
         return "redirect:/informations";
     }
 
-    @DeleteMapping("/{informationId}")
-    public String deleteInformation(@PathVariable Long informationId){
+    @PostMapping("/delete/{informationId}")
+    public String deleteInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId){
+        String login = userDetails.getUsername();
+        UserApp user = myUserDetailsService.getUserByLogin(login);
+
+        Optional<Information> information = informationRepository.findByInformationIdAndUser(informationId, user);
+        information.ifPresent(informationRepository::delete);
         return "redirect:/informations";
     }
 }
