@@ -53,6 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .failureUrl("/login-error")
+                .defaultSuccessUrl("/?just_logged", true)
                 .and()
                 .logout()
                 .invalidateHttpSession(true).clearAuthentication(true)

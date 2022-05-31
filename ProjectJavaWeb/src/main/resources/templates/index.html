@@ -1,9 +1,11 @@
-<nav th:replace="partials/beforeBody.html"></nav>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<nav th:replace="partials/beforeBody.html" ></nav>
+
 <main class="px-3">
     <h1>Store every thing you need</h1>
     <p class="lead">Do you want to save significant data or information? Have you used to forget when you should do something?</p>
     <p class="lead">Try this app and see how easy and simple it is!</p>
-    <p class="lead">
+    <p class="lead" sec:authorize="isAnonymous()">
         <a href="registration" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Sign up</a>
     </p>
 
