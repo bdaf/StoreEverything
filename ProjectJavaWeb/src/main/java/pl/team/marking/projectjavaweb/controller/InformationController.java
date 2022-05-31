@@ -3,7 +3,6 @@ package pl.team.marking.projectjavaweb.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.team.marking.projectjavaweb.DTO.InformationDTO;
@@ -16,7 +15,6 @@ import pl.team.marking.projectjavaweb.repository.InformationRepository;
 import pl.team.marking.projectjavaweb.service.MyUserDetailsService;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +39,7 @@ public class InformationController {
 
         List<Information> informationList = informationRepository.findByUser(user);
         model.addAttribute("informations", informationList);
+        model.addAttribute("isShare", false);
         return "information/informations";
     }
 
@@ -59,18 +58,31 @@ public class InformationController {
 
     // TODO
     @GetMapping("/share")
-    public String getShareInformation(@AuthenticationPrincipal MyUserDetails userDetails, Model model){
+    public String getShareInformation(@AuthenticationPrincipal MyUserDetails userDetails, Model model) {
         String login = userDetails.getUsername();
-        UserApp user = myUserDetailsService.getUserByLogin(login);
+        List<Information> informationList = informationRepository.findShareInformationForUser(login);
+        model.addAttribute("informations", informationList);
+        model.addAttribute("isShare", true);
+        return "information/informations";
+    }
 
+    // TODO
+    @GetMapping("/share/{informationId}")
+    public String getShareInformationDetails(@AuthenticationPrincipal MyUserDetails userDetails, Model model, @PathVariable Long informationId) {
+        String login = userDetails.getUsername();
+
+        Optional<Information> information = informationRepository.findShareInformationForUser(informationId, login);
+        if (information.isEmpty())
+            return "redirect:/informations/share";
+        model.addAttribute("information", information.get());
         model.addAttribute("canEdited", false);
         return "information/information_details";
     }
 
     @GetMapping("/share/link/{uuid}")
-    public String getShareLinkInformation(Model model, @PathVariable String uuid){
+    public String getShareLinkInformation(Model model, @PathVariable String uuid) {
         Optional<Information> information = informationRepository.findByLinkUuid(uuid);
-        if(information.isEmpty())
+        if (information.isEmpty())
             return "redirect:/informations";
         model.addAttribute("information", information.get());
         model.addAttribute("canEdited", false);

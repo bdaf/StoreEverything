@@ -5,16 +5,16 @@
     <div>
         <div class="row">
             <div class="col-8">
-                Moje informacje
+                <h3 th:if="${!isShare}">My information</h3>
+                <h3 th:if="${isShare}">Shared content</h3>
             </div>
-            <div class="col-4">
+            <div class="col-4" th:if="${!isShare}">
                 <a th:href="${'informations/add'}">
-                    <button type="button" class="btn btn-secondary">Add new information </button>
+                    <button type="button" class="btn btn-secondary">Add new information</button>
                 </a>
             </div>
         </div>
     </div>
-
 
     <div class="row">
                 <div class="col-6 p-3" th:each="information : ${informations}">
@@ -23,9 +23,10 @@
                             <h5 class="card-title" th:text="${information.getTitle()}"></h5>
                             <h6 class="card-subtitle mb-2 text-muted" th:text="${information.getAddingDate()}"></h6>
                             <p class="card-text" th:text="${information.getContent()}"></p>
-                            <a th:href="${'informations/' + information.getInformationId()}">
-                                <button type="button" class="btn btn-secondary">Show details </button>
-                            </a>
+                            <a class="btn btn-secondary" th:if="${!isShare}"
+                               th:href="${'informations/' + information.getInformationId()}">Show details</a>
+                            <a class="btn btn-secondary" th:if="${isShare}"
+                               th:href="${'informations/share/' + information.getInformationId()}">Show details</a>
                         </div>
                     </div>
                 </div>
