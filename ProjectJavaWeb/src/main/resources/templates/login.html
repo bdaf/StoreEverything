@@ -14,7 +14,7 @@
             <label class="default_padding control-label" for="password">Password</label>
             <input id="password" class="form-control" type="password" name="password" required autofocus="autofocus"/>
         </div>
-        <br> <p th:if="${loginError}" class="error" th:class="error" >Wrong login or password!</p> <br>
+        <br> <p th:if="${loginError}" class="error" th:class="error" >Wrong login or password!</p>
         <div class="form-group">
             <input type="submit" class="btn btn-lg btn-secondary fw-bold border-white bg-white" value="Log in" /> <br><br>
             <span>Don't have account? <a href="/" th:href="@{/registration}">Register here</a></span>

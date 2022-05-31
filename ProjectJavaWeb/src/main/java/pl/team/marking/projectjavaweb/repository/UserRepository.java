@@ -7,6 +7,6 @@ import pl.team.marking.projectjavaweb.entity.UserApp;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserApp, Long> {
+public interface UserRepository extends JpaRepository<UserApp, String> {
     Optional<UserApp> findUserByLogin(String aLogin);
 }

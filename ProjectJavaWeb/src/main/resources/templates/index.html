@@ -11,6 +11,7 @@
 
     <div th:if="${param.just_logged}" class="alert alert-dark" role="alert">
         Logged in!
+        <span th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]! </span>
     </div>
 
 </main>

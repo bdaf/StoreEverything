@@ -18,14 +18,6 @@ public class UserApp {
     public static final String ADMIN = "ADMIN";
 
     @Id
-    @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
-    private Long id;
-
     @NotBlank(message = "Login can't be blank!")
     @Size(min = 3,max = 20, message = "Login has to have from 3 to 20 characters.")
     @Pattern(regexp = "^[a-z][a-z0-9_-]+$", message = "Characters should be lowercase, first one can't be number.")
