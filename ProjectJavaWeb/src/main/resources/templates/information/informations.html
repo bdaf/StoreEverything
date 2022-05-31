@@ -1,0 +1,36 @@
+<nav th:replace="partials/beforeBody.html"></nav>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="container">
+    <div>
+        <div class="row">
+            <div class="col-8">
+                Moje informacje
+            </div>
+            <div class="col-4">
+                <a th:href="${'informations/add'}">
+                    <button type="button" class="btn btn-secondary">Add new information </button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+                <div class="col-6 p-3" th:each="information : ${informations}">
+                    <div class="card" >
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${information.getTitle()}"></h5>
+                            <h6 class="card-subtitle mb-2 text-muted" th:text="${information.getAddingDate()}"></h6>
+                            <p class="card-text" th:text="${information.getContent()}"></p>
+                            <a th:href="${'informations/' + information.getInformationId()}">
+                                <button type="button" class="btn btn-secondary">Show details </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+    </div>
+</div>
+
+
+<nav th:replace="partials/afterBody.html"></nav>
