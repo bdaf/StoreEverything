@@ -56,7 +56,6 @@ public class InformationController {
         return "information/information_details";
     }
 
-    // TODO
     @GetMapping("/share")
     public String getShareInformation(@AuthenticationPrincipal MyUserDetails userDetails, Model model) {
         String login = userDetails.getUsername();
@@ -67,7 +66,7 @@ public class InformationController {
     }
 
     // TODO
-    @GetMapping("/share/{informationId}")
+    @GetMapping("informations/share/{informationId}")
     public String getShareInformationDetails(@AuthenticationPrincipal MyUserDetails userDetails, Model model, @PathVariable Long informationId) {
         String login = userDetails.getUsername();
 
