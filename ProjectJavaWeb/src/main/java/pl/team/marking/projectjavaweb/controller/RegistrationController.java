@@ -46,6 +46,6 @@ public class RegistrationController {
 
         // saving to database
         userService.save(aUserApp);
-        return "index";
+        return "redirect:/login?registered";
     }
 }

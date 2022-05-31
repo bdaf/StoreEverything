@@ -2,6 +2,7 @@
 <head>
     <title>Store everything - Login</title>
 </head>
+
     <h1>Sign in page</h1>
 
     <form th:action="@{/login}" method="post">
@@ -19,6 +20,14 @@
             <span>Don't have account? <a href="/" th:href="@{/registration}">Register here</a></span>
         </div>
     </form>
+
+    <div th:if="${param.logout}" class="alert alert-dark" role="alert">
+        Logged out!
+    </div>
+
+    <div th:if="${param.registered}" class="alert alert-dark" role="alert">
+        Account has been created.
+    </div>
 
     <style>
         .default_padding{

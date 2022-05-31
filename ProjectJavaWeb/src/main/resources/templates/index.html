@@ -6,5 +6,10 @@
     <p class="lead">
         <a href="registration" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Sign up</a>
     </p>
+
+    <div th:if="${param.just_logged}" class="alert alert-dark" role="alert">
+        Logged in!
+    </div>
+
 </main>
 <nav th:replace="partials/afterBody.html"></nav>
