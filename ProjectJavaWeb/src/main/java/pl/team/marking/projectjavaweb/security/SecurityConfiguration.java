@@ -1,5 +1,6 @@
 package pl.team.marking.projectjavaweb.security;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -33,25 +34,36 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/register", "/style", "/script");
+        web.ignoring().antMatchers( "/css/**", "/js/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .antMatchers("/logged").hasAnyAuthority(LIMITED_USER, FULL_USER, ADMIN)
-                .antMatchers("/categories").hasAnyAuthority(LIMITED_USER, FULL_USER, ADMIN)
+                // For All
+                .antMatchers("/registration").permitAll()
+                .antMatchers("/login-error").permitAll()
+                .antMatchers("/logout").permitAll()
+                .antMatchers("/login").permitAll()
                 .antMatchers("/index").permitAll()
                 .antMatchers("/css").permitAll()
                 .antMatchers("/").permitAll()
+                // For Admin
+                .antMatchers("/logged_admin").hasAuthority(ADMIN)
+                // For any logged users
+                .antMatchers("/categories").hasAnyAuthority(LIMITED_USER, FULL_USER, ADMIN)
+                .anyRequest().authenticated()
+
+                // Details about logging
                 .and()
                 .formLogin()
                 .loginPage("/login")
                 .failureUrl("/login-error")
-                .and().logout()
+                .and()
+                .logout()
                 .invalidateHttpSession(true).clearAuthentication(true)
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).
-                logoutSuccessUrl("/login?logout");
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login?logout");
     }
 
     @Bean
