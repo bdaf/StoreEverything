@@ -1,5 +1,6 @@
 package pl.team.marking.projectjavaweb.controller;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +17,12 @@ import javax.validation.Valid;
 public class RegistrationController {
 
     private final MyUserDetailsService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public RegistrationController(MyUserDetailsService userService) {
+    public RegistrationController(MyUserDetailsService userService, PasswordEncoder aPasswordEncoder) {
         super();
         this.userService = userService;
+        this.passwordEncoder = aPasswordEncoder;
     }
 
     @ModelAttribute("user")
@@ -34,11 +37,15 @@ public class RegistrationController {
 
     @PostMapping
     public String registerUserAccount(@Valid @ModelAttribute("user") UserApp aUserApp, BindingResult result) {
-        if(result.hasErrors()){
-            return "registration";
-        }
+        // return if form had errors
+        if(result.hasErrors()) return "registration";
+
+        // encoding password
+        String encodedPassword = passwordEncoder.encode(aUserApp.getPassword());
+        aUserApp.setPassword(encodedPassword);
+
+        // saving to database
         userService.save(aUserApp);
         return "index";
-//        return "redirect:/registration?success";
     }
 }

@@ -38,6 +38,7 @@ public class MyUserDetailsServiceImpl implements MyUserDetailsService {
 
     @Override
     public void save(UserApp aUserApp) {
+        // saving to repository
         userRepository.save(aUserApp);
     }
 }
