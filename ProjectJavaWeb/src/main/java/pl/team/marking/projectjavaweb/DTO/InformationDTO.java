@@ -1,9 +1,12 @@
 package pl.team.marking.projectjavaweb.DTO;
 
 import lombok.*;
-import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Future;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -11,14 +14,18 @@ import javax.validation.constraints.Future;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InformationDTO {
-    @Length(min = 3, max = 20, message = "Tytuł musi mieć od 3 do 20 znaków")
+
+    @NotBlank(message = "Login can't be blank!")
+    @Size(min = 3, max = 20, message = "Login has to have from 3 to 20 characters.")
     private String title;
 
-    @Length(min = 5, max = 500, message = "Zawartość musi mieć od 5 do 500 znaków")
+    @NotBlank(message = "Login can't be blank!")
+    @Size(min = 5, max = 500, message = "Login has to have from 3 to 20 characters.")
     private String content;
 
-    @Future
-    private String remindDate;
+    @Future(message = "Remind date must be in future.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate remindDate;
 
     private Long categoryId;
 
