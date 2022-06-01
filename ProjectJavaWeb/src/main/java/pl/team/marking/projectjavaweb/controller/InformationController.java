@@ -12,11 +12,13 @@ import pl.team.marking.projectjavaweb.entity.MyUserDetails;
 import pl.team.marking.projectjavaweb.entity.UserApp;
 import pl.team.marking.projectjavaweb.repository.CategoryRepository;
 import pl.team.marking.projectjavaweb.repository.InformationRepository;
+import pl.team.marking.projectjavaweb.repository.UserRepository;
 import pl.team.marking.projectjavaweb.service.MyUserDetailsService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,6 +33,7 @@ public class InformationController {
 
     private final InformationRepository informationRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     @GetMapping
     public String getAllMyInformation(@AuthenticationPrincipal MyUserDetails userDetails, Model model){
@@ -138,19 +141,33 @@ public class InformationController {
         model.addAttribute("information", information.get());
         model.addAttribute("informationDTO", informationDTO);
         model.addAttribute("categories", categoryRepository.findByAllCategoryWithoutCategoryWithId(information.get().getCategory().getCategoryId()));
-        model.addAttribute("login", "");
         return "information/information_edit";
     }
 
     // TODO
     @PostMapping("/update/{informationId}")
-    public String updateInformation(@PathVariable Long informationId, @ModelAttribute("information") Information information) {
+    public String updateInformation(@PathVariable Long informationId, @ModelAttribute("informationDTO") InformationDTO informationDTO) {
         return "redirect:/informations";
     }
 
-    // TODO
     @PostMapping("/{informationId}/share")
-    public String shareInformation(@PathVariable Long informationId, @ModelAttribute("login") String login) {
+    public String shareInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId, @ModelAttribute("informationDTO") InformationDTO informationDTO) {
+        String ownerLogin = userDetails.getUsername();
+        UserApp owner = myUserDetailsService.getUserByLogin(ownerLogin);
+
+        Optional<Information> information = informationRepository.findByInformationIdAndUser(informationId, owner);
+        Optional<UserApp> user = userRepository.findUserByLogin(informationDTO.getLogin());
+        if (information.isEmpty() || user.isEmpty())
+            return "redirect:/informations";
+
+        Information newInformation = information.get();
+        for (UserApp shareUser : newInformation.getPublishedUser()) {
+            if (Objects.equals(shareUser.getLogin(), user.get().getLogin()))
+                return "redirect:/informations/update/" + informationId;
+        }
+
+        newInformation.getPublishedUser().add(user.get());
+        informationRepository.save(newInformation);
         return "redirect:/informations/update/" + informationId;
     }
 

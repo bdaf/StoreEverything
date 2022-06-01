@@ -3,9 +3,7 @@ package pl.team.marking.projectjavaweb.DTO;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Future;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -23,4 +21,6 @@ public class InformationDTO {
     private String remindDate;
 
     private Long categoryId;
+
+    private String login;
 }
