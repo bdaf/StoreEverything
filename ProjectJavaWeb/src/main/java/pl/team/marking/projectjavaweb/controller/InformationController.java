@@ -144,10 +144,30 @@ public class InformationController {
         return "information/information_edit";
     }
 
-    // TODO
     @PostMapping("/update/{informationId}")
-    public String updateInformation(@PathVariable Long informationId, @ModelAttribute("informationDTO") InformationDTO informationDTO) {
-        return "redirect:/informations";
+    public String updateInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId, @ModelAttribute("informationDTO") InformationDTO informationDTO) {
+        String ownerLogin = userDetails.getUsername();
+        UserApp owner = myUserDetailsService.getUserByLogin(ownerLogin);
+        Optional<Information> information = informationRepository.findByInformationIdAndUser(informationId, owner);
+        if (information.isEmpty())
+            return "redirect:/informations";
+
+        Information updateInformation = information.get();
+        updateInformation.setTitle(informationDTO.getTitle());
+        updateInformation.setContent(informationDTO.getContent());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate remindDate = LocalDate.parse(informationDTO.getRemindDate(), formatter);
+        updateInformation.setRemindDate(remindDate);
+
+        if (!Objects.equals(updateInformation.getCategory().getCategoryId(), informationDTO.getCategoryId())
+                && informationDTO.getCategoryId() != null) {
+            Optional<Category> category = categoryRepository.findById(informationDTO.getCategoryId());
+            if (category.isPresent())
+                updateInformation.setCategory(category.get());
+        }
+        informationRepository.save(updateInformation);
+        return "redirect:/informations/update/" + informationId;
     }
 
     @PostMapping("/{informationId}/share")
