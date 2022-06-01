@@ -4,11 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,21 +27,18 @@ public class Information {
     @Column(name = "information_id")
     private Long informationId;
 
-    @Column(name = "title", nullable = false)
-//    @Length(min = 3, max = 20, message = "Tytuł musi mieć od 3 do 20 znaków")
+    @Column(name = "title", nullable = false, length = 20)
     private String title;
 
-    @Column(name = "content", nullable = false)
-//    @Length(min = 5, max = 500, message = "Zawartość musi mieć od 5 do 500 znaków")
+    @Column(name = "content", nullable = false, length = 500)
     private String content;
 
     @Column(name = "link")
     private String link;
 
-    @Column(name = "link_uuid")
+    @Column(name = "link_uuid", length = 36, unique = true)
     private String linkUuid;
 
-    // TODO format we want is 'dd-mm-yyyy'
     @Column(name = "adding_date")
     @CreationTimestamp
     private LocalDate addingDate;
