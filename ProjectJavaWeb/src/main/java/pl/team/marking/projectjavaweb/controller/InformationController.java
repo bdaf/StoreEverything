@@ -129,7 +129,16 @@ public class InformationController {
         Optional<Information> information = informationRepository.findByInformationIdAndUser(informationId, user);
         if (information.isEmpty())
             return "redirect:/informations";
+
+        InformationDTO informationDTO = new InformationDTO();
+        informationDTO.setTitle(information.get().getTitle());
+        informationDTO.setContent(information.get().getContent());
+        informationDTO.setRemindDate(information.get().getRemindDate().toString());
+
         model.addAttribute("information", information.get());
+        model.addAttribute("informationDTO", informationDTO);
+        model.addAttribute("categories", categoryRepository.findByAllCategoryWithoutCategoryWithId(information.get().getCategory().getCategoryId()));
+        model.addAttribute("login", "");
         return "information/information_edit";
     }
 
