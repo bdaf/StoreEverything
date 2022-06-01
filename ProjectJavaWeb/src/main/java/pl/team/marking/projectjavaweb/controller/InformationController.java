@@ -15,8 +15,7 @@ import pl.team.marking.projectjavaweb.repository.InformationRepository;
 import pl.team.marking.projectjavaweb.repository.UserRepository;
 import pl.team.marking.projectjavaweb.service.MyUserDetailsService;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -98,7 +97,7 @@ public class InformationController {
     }
 
     @PostMapping("/add")
-    public String createInformation(@AuthenticationPrincipal MyUserDetails userDetails, @ModelAttribute("informationDTO") InformationDTO informationDTO){
+    public String createInformation(@AuthenticationPrincipal MyUserDetails userDetails, @Valid @ModelAttribute("informationDTO") InformationDTO informationDTO) {
         Information information = new Information();
 
         String login = userDetails.getUsername();
@@ -106,16 +105,15 @@ public class InformationController {
         information.setUser(user);
 
         Optional<Category> category = categoryRepository.findById(informationDTO.getCategoryId());
-        if(category.isEmpty())
+        if (category.isEmpty())
             return "redirect:/informations";
         information.setCategory(category.get());
 
         information.setTitle(informationDTO.getTitle());
         information.setContent(informationDTO.getContent());
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate remindDate = LocalDate.parse(informationDTO.getRemindDate(), formatter);
-        information.setRemindDate(remindDate);
+        information.setRemindDate(informationDTO.getRemindDate());
+
         String uuid = String.valueOf(UUID.randomUUID());
         information.setLink(BASIC_URL + uuid);
         information.setLinkUuid(uuid);
@@ -136,7 +134,7 @@ public class InformationController {
         InformationDTO informationDTO = new InformationDTO();
         informationDTO.setTitle(information.get().getTitle());
         informationDTO.setContent(information.get().getContent());
-        informationDTO.setRemindDate(information.get().getRemindDate().toString());
+        informationDTO.setRemindDate(information.get().getRemindDate());
 
         model.addAttribute("information", information.get());
         model.addAttribute("informationDTO", informationDTO);
@@ -145,7 +143,7 @@ public class InformationController {
     }
 
     @PostMapping("/update/{informationId}")
-    public String updateInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId, @ModelAttribute("informationDTO") InformationDTO informationDTO) {
+    public String updateInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId, @Valid @ModelAttribute("informationDTO") InformationDTO informationDTO) {
         String ownerLogin = userDetails.getUsername();
         UserApp owner = myUserDetailsService.getUserByLogin(ownerLogin);
         Optional<Information> information = informationRepository.findByInformationIdAndUser(informationId, owner);
@@ -156,22 +154,19 @@ public class InformationController {
         updateInformation.setTitle(informationDTO.getTitle());
         updateInformation.setContent(informationDTO.getContent());
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate remindDate = LocalDate.parse(informationDTO.getRemindDate(), formatter);
-        updateInformation.setRemindDate(remindDate);
+        updateInformation.setRemindDate(informationDTO.getRemindDate());
 
         if (!Objects.equals(updateInformation.getCategory().getCategoryId(), informationDTO.getCategoryId())
                 && informationDTO.getCategoryId() != null) {
             Optional<Category> category = categoryRepository.findById(informationDTO.getCategoryId());
-            if (category.isPresent())
-                updateInformation.setCategory(category.get());
+            category.ifPresent(updateInformation::setCategory);
         }
         informationRepository.save(updateInformation);
         return "redirect:/informations/update/" + informationId;
     }
 
     @PostMapping("/{informationId}/share")
-    public String shareInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId, @ModelAttribute("informationDTO") InformationDTO informationDTO) {
+    public String shareInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId, @Valid @ModelAttribute("informationDTO") InformationDTO informationDTO) {
         String ownerLogin = userDetails.getUsername();
         UserApp owner = myUserDetailsService.getUserByLogin(ownerLogin);
 
