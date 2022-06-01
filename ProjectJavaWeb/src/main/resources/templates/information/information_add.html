@@ -1,0 +1,24 @@
+<nav th:replace="partials/beforeBody.html"></nav>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>New information</title>
+</head>
+<form name="createInformationForm" action="#" th:action="@{/informations/add}" method="post">
+    <label>Title</label> <input type="text" th:field="*{informationDTO.title}" name="title"><br/>
+    <label>Content</label> <input type="text" th:field="*{informationDTO.content}" name="content"><br/>
+    <label>Remind date</label> <input type="date" th:field="*{informationDTO.remindDate}" name="remindDate"><br/>
+
+    <label>Category</label>
+    <select class="form-select" th:field="*{informationDTO.categoryId}">
+        <option th:each="category : ${categories}"
+                th:value="${category.getCategoryId()}"
+                th:text="${category.getName()}">
+        </option>
+    </select>
+
+    <button type="reset">Reset</button>
+    <button type="submit">Save</button>
+</form>
+
+<nav th:replace="partials/afterBody.html"></nav>

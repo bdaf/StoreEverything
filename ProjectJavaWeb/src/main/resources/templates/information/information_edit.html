@@ -1,0 +1,60 @@
+<nav th:replace="partials/beforeBody.html"></nav>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="card">
+    <div class="card-header" th:text="${information.getTitle() + ' ' + information.getAddingDate()}">
+    </div>
+    <div class="card-body">
+        <h6 class="card-title"
+            th:text="${information.getUser().getName() + ' ' + information.getUser().getSurname()}"></h6>
+        <label>Title</label>
+        <form action="#" th:action="${'/informations/update/' + information.getInformationId()}" method="post">
+            <div>
+                <input type="text" class="form-control" placeholder="Title" th:field="*{informationDTO.title}"
+                       th:value="${informationDTO.getTitle()}"/>
+            </div>
+            <label>Content</label>
+            <div>
+                <input type="text" class="form-control" placeholder="Content" th:value="${informationDTO.getContent()}"
+                       th:field="*{informationDTO.content}"/>
+            </div>
+            <label>Remind date</label>
+            <div>
+                <input type="date" class="form-control" placeholder="Remind date"
+                       th:value="${informationDTO.getRemindDate()}" th:field="*{informationDTO.remindDate}"/>
+            </div>
+
+            <label>Category</label>
+            <select class="form-select" th:field="*{informationDTO.categoryId}">
+                <option selected
+                        th:value="${information.getCategory().getCategoryId()}"
+                        th:text="${information.getCategory().getName()}">
+                </option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.getCategoryId()}"
+                        th:text="${category.getName()}">
+                </option>
+            </select>
+
+            <br/>
+            <label>Share link</label>
+            <p class="card-text" th:text="${'Share link: ' + information.getLink()}"></p>
+            <label>Count share person</label>
+            <p class="card-text" th:text="${'Share person: ' + information.getPublishedUser().size()}"></p>
+            <div>
+                <button class="btn btn-danger" type="submit" id="updateButton">Update information</button>
+            </div>
+        </form>
+        <hr/>
+        <h5>Share for person</h5>
+        <form action="#" th:action="${'/informations/' + information.getInformationId() + '/share'}" method="post">
+            <input type="text" class="form-control" placeholder="Login" th:field="*{informationDTO.login}"/>
+            <div class="p-3">
+                <button class="btn btn-danger" type="submit" id="addPersonButton">Add person</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<nav th:replace="partials/afterBody.html"></nav>
