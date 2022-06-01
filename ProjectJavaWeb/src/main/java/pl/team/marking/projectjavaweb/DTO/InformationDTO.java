@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -27,6 +28,7 @@ public class InformationDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate remindDate;
 
+    @NotNull(message = "Category can't be blank!")
     private Long categoryId;
 
     private String login;
