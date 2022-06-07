@@ -24,9 +24,9 @@
                             <h6 class="card-subtitle mb-2 text-muted" th:text="${information.getAddingDate()}"></h6>
                             <p class="card-text" th:text="${information.getContent()}"></p>
                             <a class="btn btn-secondary" th:if="${!isShare}"
-                               th:href="${'informations/' + information.getInformationId()}">Show details</a>
+                               th:href="${'/informations/' + information.getInformationId()}">Show details</a>
                             <a class="btn btn-secondary" th:if="${isShare}"
-                               th:href="${'informations/share/' + information.getInformationId()}">Show details</a>
+                               th:href="${'/informations/share/' + information.getInformationId()}">Show details</a>
                         </div>
                     </div>
                 </div>
