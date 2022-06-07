@@ -30,6 +30,4 @@ public class InformationDTO {
 
     @NotNull(message = "Category can't be blank!")
     private Long categoryId;
-
-    private String login;
 }

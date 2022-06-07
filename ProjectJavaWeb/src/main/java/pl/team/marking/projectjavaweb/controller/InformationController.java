@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.team.marking.projectjavaweb.DTO.InformationDTO;
+import pl.team.marking.projectjavaweb.DTO.PublishedUserDTO;
 import pl.team.marking.projectjavaweb.entity.Category;
 import pl.team.marking.projectjavaweb.entity.Information;
 import pl.team.marking.projectjavaweb.entity.MyUserDetails;
@@ -138,6 +139,7 @@ public class InformationController {
 
         model.addAttribute("information", information.get());
         model.addAttribute("informationDTO", informationDTO);
+        model.addAttribute("publishedUser", new PublishedUserDTO());
         model.addAttribute("categories", categoryRepository.findByAllCategoryWithoutCategoryWithId(information.get().getCategory().getCategoryId()));
         return "information/information_edit";
     }
@@ -166,12 +168,12 @@ public class InformationController {
     }
 
     @PostMapping("/{informationId}/share")
-    public String shareInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId, @Valid @ModelAttribute("informationDTO") InformationDTO informationDTO) {
+    public String shareInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId, @Valid @ModelAttribute("publishedUser") PublishedUserDTO publishedUserDTO) {
         String ownerLogin = userDetails.getUsername();
         UserApp owner = myUserDetailsService.getUserByLogin(ownerLogin);
 
         Optional<Information> information = informationRepository.findByInformationIdAndUser(informationId, owner);
-        Optional<UserApp> user = userRepository.findUserByLogin(informationDTO.getLogin());
+        Optional<UserApp> user = userRepository.findUserByLogin(publishedUserDTO.getLogin());
         if (information.isEmpty() || user.isEmpty())
             return "redirect:/informations";
 

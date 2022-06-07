@@ -48,7 +48,7 @@
         <hr/>
         <h5>Share for person</h5>
         <form action="#" th:action="${'/informations/' + information.getInformationId() + '/share'}" method="post">
-            <input type="text" class="form-control" placeholder="Login" th:field="*{informationDTO.login}"/>
+            <input type="text" class="form-control" placeholder="Login" th:field="*{publishedUser.login}"/>
             <div class="p-3">
                 <button class="btn btn-danger" type="submit" id="addPersonButton">Add person</button>
             </div>
