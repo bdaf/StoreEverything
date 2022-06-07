@@ -36,7 +36,7 @@ public class InformationController {
     private final UserRepository userRepository;
 
     @GetMapping
-    public String getAllMyInformation(@AuthenticationPrincipal MyUserDetails userDetails, Model model){
+    public String getAllMyInformation(@AuthenticationPrincipal MyUserDetails userDetails, Model model) {
         String login = userDetails.getUsername();
         UserApp user = myUserDetailsService.getUserByLogin(login);
 
@@ -46,13 +46,24 @@ public class InformationController {
         return "information/informations";
     }
 
+    @GetMapping("/remind")
+    public String getAllMyRemindInformation(@AuthenticationPrincipal MyUserDetails userDetails, Model model) {
+        String login = userDetails.getUsername();
+        UserApp user = myUserDetailsService.getUserByLogin(login);
+
+        List<Information> informationList = informationRepository.findRemindByUser(user);
+        model.addAttribute("informations", informationList);
+        model.addAttribute("isShare", false);
+        return "information/informations";
+    }
+
     @GetMapping("/{informationId}")
-    public String getInformationDetails(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId, Model model){
+    public String getInformationDetails(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId, Model model) {
         String login = userDetails.getUsername();
         UserApp user = myUserDetailsService.getUserByLogin(login);
 
         Optional<Information> information = informationRepository.findByInformationIdAndUser(informationId, user);
-        if(information.isEmpty())
+        if (information.isEmpty())
             return "redirect:/informations";
         model.addAttribute("information", information.get());
         model.addAttribute("canEdited", true);

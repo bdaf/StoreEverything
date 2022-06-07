@@ -13,6 +13,12 @@ import java.util.Optional;
 public interface InformationRepository extends JpaRepository<Information, Long> {
     List<Information> findByUser(UserApp user);
 
+    @Query(value = "SELECT i " +
+            "FROM Information i " +
+            "WHERE i.user = :user " +
+            "AND i.remindDate <= CURRENT_DATE")
+    List<Information> findRemindByUser(UserApp user);
+
     @Query(value = "SELECT * " +
             "FROM information i " +
             "JOIN information_published_user ipu ON i.information_id = ipu.information_information_id " +
