@@ -2,11 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 
-<div class="card">
+<div style="color: #333333" class="card">
     <div class="card-header" th:text="${information.getTitle() + ' ' + information.getAddingDate()}">
     </div>
     <div class="card-body">
-        <h6 class="card-title" th:text="${information.getUser().getName() + ' ' + information.getUser().getSurname()}"></h6>
+        <h6 class="card-title"
+            th:text="${information.getUser().getName() + ' ' + information.getUser().getSurname()}"></h6>
         <p th:text="${'Category: ' + information.getCategory().getName()}"></p>
         <p class="card-text" th:text="${information.getContent()}"></p>
         <p class="card-text" th:text="${'Remind date: ' + information.getRemindDate()}"></p>
