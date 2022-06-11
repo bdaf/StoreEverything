@@ -1,0 +1,19 @@
+<nav th:replace="partials/beforeBody.html"></nav>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="container">
+    <div style="color: #333333">
+        <div class="col-12 p-3" th:each="user : ${users}">
+            <div class="card">
+                <div class="card-header" th:text="${'Age: ' + user.getAge() + ' years old. Enabled: ' + user.getIsActive()}"></div>
+                <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                        <p th:text="${user.getName() + ' ' + user.getSurname() + ' - Login: ' + user.getLogin() + ' - Role: ' + user.getRole()}" ></p>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<nav th:replace="partials/afterBody.html"></nav>

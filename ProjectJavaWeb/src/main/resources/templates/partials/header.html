@@ -9,7 +9,7 @@
             <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="/informations/share">Shared
                 content</a>
             <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="/categories">Categories</a>
-            <a class="nav-link fw-bold py-1 px-0" href="/logged_admin" sec:authorize="isAuthenticated()">For Admin</a>
+            <a class="nav-link fw-bold py-1 px-0" href="/users" sec:authorize="isAuthenticated()">Users</a>
             <a class="nav-link fw-bold py-1 px-0" href="#" sec:authorize="isAuthenticated()"  sec:authentication="name"></a>
             <a class="nav-link fw-bold py-1 px-0" href="/logout" sec:authorize="isAuthenticated()">Log out</a>
             <a class="nav-link fw-bold py-1 px-0" href="/login" sec:authorize="isAnonymous()">Sign in</a>

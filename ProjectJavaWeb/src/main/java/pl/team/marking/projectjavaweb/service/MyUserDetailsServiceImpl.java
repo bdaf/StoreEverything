@@ -7,6 +7,7 @@ import pl.team.marking.projectjavaweb.entity.MyUserDetails;
 import pl.team.marking.projectjavaweb.entity.UserApp;
 import pl.team.marking.projectjavaweb.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,5 +36,10 @@ public class MyUserDetailsServiceImpl implements MyUserDetailsService {
     @Override
     public UserApp getUserByLogin(String aLogin) {
         return userRepository.findUserByLogin(aLogin).get();
+    }
+
+    @Override
+    public List<UserApp> getAllUsers() {
+        return userRepository.findAll();
     }
 }
