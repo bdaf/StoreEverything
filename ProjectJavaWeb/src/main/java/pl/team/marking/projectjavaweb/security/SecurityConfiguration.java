@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import pl.team.marking.projectjavaweb.service.RemindService;
 
 import static pl.team.marking.projectjavaweb.entity.UserApp.*;
 
@@ -18,11 +19,13 @@ import static pl.team.marking.projectjavaweb.entity.UserApp.*;
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    final UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+    private final RemindService remindService;
 
-    public SecurityConfiguration(UserDetailsService userDetailsService) {
+    public SecurityConfiguration(UserDetailsService userDetailsService, RemindService aRemindService) {
         super();
         this.userDetailsService = userDetailsService;
+        this.remindService = aRemindService;
     }
 
     @Override
@@ -37,6 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http.authorizeHttpRequests()
                 // For All
                 .antMatchers("/registration", "/login-error", "/logout", "/login", "/index", "/informations/share/link/**", "/css/**", "/js/**", "/").permitAll()
@@ -51,7 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .failureUrl("/login-error")
-                .defaultSuccessUrl("/?just_logged", true)
+                .defaultSuccessUrl("/index_with_reminder?just_logged", true)
                 .and()
                 .logout()
                 .invalidateHttpSession(true).clearAuthentication(true)

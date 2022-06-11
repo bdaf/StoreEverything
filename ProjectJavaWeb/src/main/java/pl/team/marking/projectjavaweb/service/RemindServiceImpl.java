@@ -12,10 +12,10 @@ public class RemindServiceImpl implements RemindService {
     InformationRepository informationRepository;
 
     @Override
-    public String ifHasRemindInformation(UserApp user) {
+    public boolean ifHasRemindInformation(UserApp user) {
         Integer ifHasRemind = informationRepository.countRemindInformationByUser(user);
         if (ifHasRemind > 0)
-            return "redirect:/informations/remind";
-        return "redirect:/index";
+            return true;
+        return false;
     }
 }
