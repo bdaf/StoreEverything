@@ -12,16 +12,19 @@
             <div>
                 <input type="text" class="form-control" placeholder="Title" th:field="*{informationDTO.title}"
                        th:value="${informationDTO.getTitle()}"/>
+                <div th:if="${#fields.hasErrors('informationDTO.title')}" class="error" th:errors="*{informationDTO.title}"></div>
             </div>
             <label>Content</label>
             <div>
                 <input type="text" class="form-control" placeholder="Content" th:value="${informationDTO.getContent()}"
                        th:field="*{informationDTO.content}"/>
+                <div th:if="${#fields.hasErrors('informationDTO.content')}" class="error" th:errors="*{informationDTO.content}"></div>
             </div>
             <label>Remind date</label>
             <div>
                 <input type="date" class="form-control" placeholder="Remind date"
                        th:value="${informationDTO.getRemindDate()}" th:field="*{informationDTO.remindDate}"/>
+                <div th:if="${#fields.hasErrors('informationDTO.remindDate')}" class="error" th:errors="*{informationDTO.remindDate}"></div>
             </div>
 
             <label>Category</label>
@@ -35,6 +38,7 @@
                         th:text="${category.getName()}">
                 </option>
             </select>
+            <div th:if="${#fields.hasErrors('informationDTO.categoryId')}" class="error" th:errors="*{informationDTO.categoryId}"></div>
 
             <br/>
             <label>Share link</label>
@@ -49,6 +53,7 @@
         <h5>Share for person</h5>
         <form action="#" th:action="${'/informations/' + information.getInformationId() + '/share'}" method="post">
             <input type="text" class="form-control" placeholder="Login" th:field="*{publishedUser.login}"/>
+            <div th:if="${#fields.hasErrors('publishedUser.login')}" class="error" th:errors="*{publishedUser.login}"></div>
             <div class="p-3">
                 <button class="btn btn-danger" type="submit" id="addPersonButton">Add person</button>
             </div>

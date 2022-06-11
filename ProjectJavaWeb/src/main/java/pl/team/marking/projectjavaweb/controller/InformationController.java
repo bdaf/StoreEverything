@@ -112,7 +112,6 @@ public class InformationController {
     @PostMapping("/add")
     public String createInformation(@AuthenticationPrincipal MyUserDetails userDetails, @Valid @ModelAttribute("informationDTO") InformationDTO informationDTO, BindingResult result, Model aModel) {
         if(result.hasErrors()) {
-//            return "redirect:/informations/add";
             aModel.addAttribute("categories", categoryRepository.findAll());
             return "information/information_add";
         }
@@ -150,20 +149,25 @@ public class InformationController {
         if (information.isEmpty())
             return "redirect:/informations";
 
-        InformationDTO informationDTO = new InformationDTO();
-        informationDTO.setTitle(information.get().getTitle());
-        informationDTO.setContent(information.get().getContent());
-        informationDTO.setRemindDate(information.get().getRemindDate());
-
-        model.addAttribute("information", information.get());
-        model.addAttribute("informationDTO", informationDTO);
+        setInformationAndModel(model, information);
         model.addAttribute("publishedUser", new PublishedUserDTO());
         model.addAttribute("categories", categoryRepository.findByAllCategoryWithoutCategoryWithId(information.get().getCategory().getCategoryId()));
         return "information/information_edit";
     }
 
     @PostMapping("/update/{informationId}")
-    public String updateInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId, @Valid @ModelAttribute("informationDTO") InformationDTO informationDTO) {
+    public String updateInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId, @Valid @ModelAttribute("informationDTO") InformationDTO informationDTO, BindingResult result, Model aModel) {
+        if(result.hasErrors()) {
+            String login = userDetails.getUsername();
+            UserApp user = myUserDetailsService.getUserByLogin(login);
+            Optional<Information> information = informationRepository.findByInformationIdAndUser(informationId, user);
+            aModel.addAttribute("information", information.get());
+            aModel.addAttribute("informationDTO", informationDTO);
+            aModel.addAttribute("publishedUser", new PublishedUserDTO());
+            aModel.addAttribute("categories", categoryRepository.findByAllCategoryWithoutCategoryWithId(information.get().getCategory().getCategoryId()));
+            return "information/information_edit";
+        }
+
         String ownerLogin = userDetails.getUsername();
         UserApp owner = myUserDetailsService.getUserByLogin(ownerLogin);
         Optional<Information> information = informationRepository.findByInformationIdAndUser(informationId, owner);
@@ -186,7 +190,18 @@ public class InformationController {
     }
 
     @PostMapping("/{informationId}/share")
-    public String shareInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId, @Valid @ModelAttribute("publishedUser") PublishedUserDTO publishedUserDTO) {
+    public String shareInformation(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable Long informationId, @Valid @ModelAttribute("publishedUser") PublishedUserDTO publishedUserDTO, BindingResult result, Model aModel) {
+        if(result.hasErrors()) {
+            String login = userDetails.getUsername();
+            UserApp user = myUserDetailsService.getUserByLogin(login);
+            Optional<Information> information = informationRepository.findByInformationIdAndUser(informationId, user);
+
+            setInformationAndModel(aModel, information);
+            aModel.addAttribute("publishedUser", publishedUserDTO);
+            aModel.addAttribute("categories", categoryRepository.findByAllCategoryWithoutCategoryWithId(information.get().getCategory().getCategoryId()));
+            return "information/information_edit";
+        }
+
         String ownerLogin = userDetails.getUsername();
         UserApp owner = myUserDetailsService.getUserByLogin(ownerLogin);
 
@@ -204,6 +219,16 @@ public class InformationController {
         newInformation.getPublishedUser().add(user.get());
         informationRepository.save(newInformation);
         return "redirect:/informations/update/" + informationId;
+    }
+
+    private void setInformationAndModel(Model aModel, Optional<Information> aInformation) {
+        InformationDTO informationDTO = new InformationDTO();
+        informationDTO.setTitle(aInformation.get().getTitle());
+        informationDTO.setContent(aInformation.get().getContent());
+        informationDTO.setRemindDate(aInformation.get().getRemindDate());
+
+        aModel.addAttribute("information", aInformation.get());
+        aModel.addAttribute("informationDTO", informationDTO);
     }
 
     @PostMapping("/delete/{informationId}")
