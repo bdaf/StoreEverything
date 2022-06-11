@@ -17,14 +17,15 @@ import java.time.LocalDate;
 public class InformationDTO {
 
     @NotBlank(message = "Login can't be blank!")
-    @Size(min = 3, max = 20, message = "Login has to have from 3 to 20 characters.")
+    @Size(min = 3, max = 20, message = "Title has to have from 3 to 20 characters.")
     private String title;
 
     @NotBlank(message = "Login can't be blank!")
-    @Size(min = 5, max = 500, message = "Login has to have from 3 to 20 characters.")
+    @Size(min = 5, max = 500, message = "Content has to have from 5 to 500 characters.")
     private String content;
 
     @Future(message = "Remind date must be in future.")
+    @NotNull(message = "Remind date can't be blank!")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate remindDate;
 

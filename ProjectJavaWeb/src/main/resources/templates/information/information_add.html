@@ -8,25 +8,30 @@
     <div class="form-group">
         <label class="default_padding control-label" >Title</label>
         <input class="form-control" type="text" th:field="*{informationDTO.title}" name="title"/>
+        <div th:if="${#fields.hasErrors('informationDTO.title')}" class="error" th:errors="*{informationDTO.title}"></div>
     </div>
 
     <div class="form-group">
         <label class="default_padding control-label" >Content</label>
         <input class="form-control" type="text" th:field="*{informationDTO.content}" name="title"/>
+        <div th:if="${#fields.hasErrors('informationDTO.content')}" class="error" th:errors="*{informationDTO.content}"></div>
     </div>
 
     <div class="form-group">
         <label class="default_padding control-label" >Remind date</label>
         <input class="form-control" type="date" th:field="*{informationDTO.remindDate}" name="title"/>
+        <div th:if="${#fields.hasErrors('informationDTO.remindDate')}" class="error" th:errors="*{informationDTO.remindDate}"></div>
     </div>
 
     <label class="default_padding">Category</label>
     <select class="form-select" th:field="*{informationDTO.categoryId}">
+        <option value=""> Select category </option>
         <option th:each="category : ${categories}"
                 th:value="${category.getCategoryId()}"
                 th:text="${category.getName()}">
         </option>
     </select>
+    <div th:if="${#fields.hasErrors('informationDTO.categoryId')}" class="error" th:errors="*{informationDTO.categoryId}"></div>
     <br>
     <div class="form-group default_padding">
         <input type="submit" class="btn btn-lg btn-secondary fw-bold border-white bg-white" value="Save" />

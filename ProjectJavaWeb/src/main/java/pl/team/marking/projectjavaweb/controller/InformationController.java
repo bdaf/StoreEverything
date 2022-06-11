@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.team.marking.projectjavaweb.DTO.InformationDTO;
 import pl.team.marking.projectjavaweb.DTO.PublishedUserDTO;
@@ -109,7 +110,13 @@ public class InformationController {
     }
 
     @PostMapping("/add")
-    public String createInformation(@AuthenticationPrincipal MyUserDetails userDetails, @Valid @ModelAttribute("informationDTO") InformationDTO informationDTO) {
+    public String createInformation(@AuthenticationPrincipal MyUserDetails userDetails, @Valid @ModelAttribute("informationDTO") InformationDTO informationDTO, BindingResult result, Model aModel) {
+        if(result.hasErrors()) {
+//            return "redirect:/informations/add";
+            aModel.addAttribute("categories", categoryRepository.findAll());
+            return "information/information_add";
+        }
+
         Information information = new Information();
 
         String login = userDetails.getUsername();
