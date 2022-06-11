@@ -11,4 +11,7 @@ public interface MyUserDetailsService extends UserDetailsService {
     UserApp getUserByLogin(String aLogin);
     List<UserApp> getAllUsers();
 
+    List<String> getAllRoles();
+
+    void updateUserRole(UserApp aUserToUpdateRole, String aUserLogin);
 }

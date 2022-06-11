@@ -7,8 +7,11 @@ import pl.team.marking.projectjavaweb.entity.MyUserDetails;
 import pl.team.marking.projectjavaweb.entity.UserApp;
 import pl.team.marking.projectjavaweb.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static pl.team.marking.projectjavaweb.entity.UserApp.*;
 
 @Service
 public class MyUserDetailsServiceImpl implements MyUserDetailsService {
@@ -41,5 +44,17 @@ public class MyUserDetailsServiceImpl implements MyUserDetailsService {
     @Override
     public List<UserApp> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public List<String> getAllRoles() {
+        return new ArrayList<>(List.of(LIMITED_USER, FULL_USER, ADMIN));
+    }
+
+    @Override
+    public void updateUserRole(UserApp aUserToGetRoleFrom, String aUserLogin) {
+        UserApp userFoundByLogin = userRepository.findUserByLogin(aUserLogin).get();
+        userFoundByLogin.setRole(aUserToGetRoleFrom.getRole());
+        userRepository.save(userFoundByLogin);
     }
 }
