@@ -50,9 +50,11 @@ public class CategoryController {
     @PostMapping("/add_post")
     public String addCategory(@ModelAttribute("category") Category category) throws JsonProcessingException {
         System.out.println("hello2");
-        if(restConnector.checkCategory(category.getName()))
-        categoryRepository.save(category);
+        if(restConnector.checkCategory(category.getName())) {
+            categoryRepository.save(category);
+            return "redirect:/categories";
+        }
         System.out.println("hello3");
-        return "redirect:/categories";
+        return "category/error";
     }
 }

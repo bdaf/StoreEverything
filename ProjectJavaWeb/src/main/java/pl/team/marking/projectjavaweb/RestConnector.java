@@ -4,10 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Locale;
@@ -21,7 +19,6 @@ public class RestConnector {
 
     String url="http://localhost:8070/categories";
 
-    @GetMapping("checkk")
     public boolean checkCategory(String category) throws JsonProcessingException {
         ResponseEntity<String> response = connector.getForEntity(url,String.class);
         ObjectMapper mapper = new ObjectMapper();
