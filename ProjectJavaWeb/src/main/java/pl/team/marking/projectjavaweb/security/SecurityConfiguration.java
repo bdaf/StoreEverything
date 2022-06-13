@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.client.RestTemplate;
 import pl.team.marking.projectjavaweb.service.RemindService;
 
 import static pl.team.marking.projectjavaweb.entity.UserApp.*;
@@ -21,6 +22,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final RemindService remindService;
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
     public SecurityConfiguration(UserDetailsService userDetailsService, RemindService aRemindService) {
         super();

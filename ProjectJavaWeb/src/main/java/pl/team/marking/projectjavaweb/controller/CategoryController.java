@@ -1,6 +1,7 @@
 package pl.team.marking.projectjavaweb.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import pl.team.marking.projectjavaweb.RestConnector;
 import pl.team.marking.projectjavaweb.entity.Category;
 import pl.team.marking.projectjavaweb.entity.MyUserDetails;
 import pl.team.marking.projectjavaweb.entity.UserApp;
@@ -21,10 +23,12 @@ public class CategoryController {
 
     final CategoryRepository categoryRepository;
     final MyUserDetailsService myUserDetailsService;
+    final RestConnector restConnector;
 
-    public CategoryController(CategoryRepository aCategoryRepository, MyUserDetailsService aMyUserDetailsService) {
+    public CategoryController(CategoryRepository aCategoryRepository, MyUserDetailsService aMyUserDetailsService,RestConnector restConnector) {
         this.categoryRepository = aCategoryRepository;
         this.myUserDetailsService = aMyUserDetailsService;
+        this.restConnector = restConnector;
     }
 
     @GetMapping
@@ -44,8 +48,9 @@ public class CategoryController {
     }
 
     @PostMapping("/add_post")
-    public String addCategory(@ModelAttribute("category") Category category) {
+    public String addCategory(@ModelAttribute("category") Category category) throws JsonProcessingException {
         System.out.println("hello2");
+        if(restConnector.checkCategory(category.getName()))
         categoryRepository.save(category);
         System.out.println("hello3");
         return "redirect:/categories";
