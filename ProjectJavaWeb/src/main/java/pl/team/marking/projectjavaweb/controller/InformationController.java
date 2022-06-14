@@ -40,12 +40,12 @@ public class InformationController {
     private final UserRepository userRepository;
 
     @GetMapping
-    public String getAllMyInformation(@RequestParam("by") int id,@AuthenticationPrincipal MyUserDetails userDetails, Model model, HttpServletRequest request, HttpServletResponse response) {
+    public String getAllMyInformation(@RequestParam(name = "by",required = false,defaultValue = "1") String id, @RequestParam(name = "name",required = false) String name, @RequestParam(name = "date", required = false) String date, @AuthenticationPrincipal MyUserDetails userDetails, Model model, HttpServletRequest request, HttpServletResponse response) {
         String login = userDetails.getUsername();
         UserApp user = myUserDetailsService.getUserByLogin(login);
 
         List<Information> informationList = informationRepository.findByUserOrderByTitle(user);
-
+        List<Category> categoriesList = categoryRepository.findAll();
         for (Cookie c : request.getCookies()) {
             if (c.getName().equals("sort")&&c.getValue().equals("title")){
                 informationList = informationRepository.findByUserOrderByTitle(user);
@@ -70,37 +70,38 @@ public class InformationController {
         addCookie(id, response);
 
         model.addAttribute("informations", informationList);
+        model.addAttribute("categories",categoriesList);
         model.addAttribute("isShare", false);
         return "information/informations";
     }
 
-    private void addCookie(int id, HttpServletResponse response) {
-        if(id==1){
+    private void addCookie(String id, HttpServletResponse response) {
+        if(id.equals("1")){
             Cookie cookie = new Cookie("sort", "title");
             cookie.setMaxAge(30 * 24 * 60 * 60);
             response.addCookie(cookie);
         }
-        else if(id==2){
+        else if(id.equals("2")){
             Cookie cookie = new Cookie("sort", "titledesc");
             cookie.setMaxAge(30 * 24 * 60 * 60);
             response.addCookie(cookie);
         }
-        else if(id==3){
+        else if(id.equals("3")){
             Cookie cookie = new Cookie("sort", "category");
             cookie.setMaxAge(30 * 24 * 60 * 60);
             response.addCookie(cookie);
         }
-        else if(id==4){
+        else if(id.equals("4")){
             Cookie cookie = new Cookie("sort", "categorydesc");
             cookie.setMaxAge(30 * 24 * 60 * 60);
             response.addCookie(cookie);
         }
-        else if(id==5){
+        else if(id.equals("5")){
             Cookie cookie = new Cookie("sort", "date");
             cookie.setMaxAge(30 * 24 * 60 * 60);
             response.addCookie(cookie);
         }
-        else if(id==6){
+        else if(id.equals("6")){
             Cookie cookie = new Cookie("sort", "datedesc");
             cookie.setMaxAge(30 * 24 * 60 * 60);
             response.addCookie(cookie);

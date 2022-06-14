@@ -11,8 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface InformationRepository extends JpaRepository<Information, Long> {
-    List<Information> findByUser(UserApp user);
-
     List<Information> findByUserOrderByTitle(UserApp user);
 
     List<Information> findByUserOrderByTitleDesc(UserApp user);
