@@ -13,6 +13,18 @@ import java.util.Optional;
 public interface InformationRepository extends JpaRepository<Information, Long> {
     List<Information> findByUser(UserApp user);
 
+    List<Information> findByUserOrderByTitle(UserApp user);
+
+    List<Information> findByUserOrderByTitleDesc(UserApp user);
+
+    List<Information> findByUserOrderByAddingDate(UserApp user);
+
+    List<Information> findByUserOrderByAddingDateDesc(UserApp user);
+
+    List<Information> findByUserOrderByCategory(UserApp user);
+
+    List<Information> findByUserOrderByCategoryDesc(UserApp user);
+
     @Query(value = "SELECT i " +
             "FROM Information i " +
             "WHERE i.user = :user " +

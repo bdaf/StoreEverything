@@ -17,6 +17,9 @@ import pl.team.marking.projectjavaweb.repository.InformationRepository;
 import pl.team.marking.projectjavaweb.repository.UserRepository;
 import pl.team.marking.projectjavaweb.service.MyUserDetailsService;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
@@ -37,14 +40,71 @@ public class InformationController {
     private final UserRepository userRepository;
 
     @GetMapping
-    public String getAllMyInformation(@AuthenticationPrincipal MyUserDetails userDetails, Model model) {
+    public String getAllMyInformation(@RequestParam("by") int id,@AuthenticationPrincipal MyUserDetails userDetails, Model model, HttpServletRequest request, HttpServletResponse response) {
         String login = userDetails.getUsername();
         UserApp user = myUserDetailsService.getUserByLogin(login);
 
-        List<Information> informationList = informationRepository.findByUser(user);
+        List<Information> informationList = informationRepository.findByUserOrderByTitle(user);
+
+        for (Cookie c : request.getCookies()) {
+            if (c.getName().equals("sort")&&c.getValue().equals("title")){
+                informationList = informationRepository.findByUserOrderByTitle(user);
+            }
+            else if (c.getName().equals("sort")&&c.getValue().equals("titledesc")){
+                informationList = informationRepository.findByUserOrderByTitleDesc(user);
+            }
+            else if (c.getName().equals("sort")&&c.getValue().equals("category")){
+                informationList = informationRepository.findByUserOrderByCategory(user);
+            }
+            else if (c.getName().equals("sort")&&c.getValue().equals("categorydesc")){
+                informationList = informationRepository.findByUserOrderByCategoryDesc(user);
+            }
+            else if (c.getName().equals("sort")&&c.getValue().equals("date")){
+                informationList = informationRepository.findByUserOrderByAddingDate(user);
+            }
+            else if (c.getName().equals("sort")&&c.getValue().equals("datedesc")){
+                informationList = informationRepository.findByUserOrderByAddingDateDesc(user);
+            }
+            }
+
+        addCookie(id, response);
+
         model.addAttribute("informations", informationList);
         model.addAttribute("isShare", false);
         return "information/informations";
+    }
+
+    private void addCookie(int id, HttpServletResponse response) {
+        if(id==1){
+            Cookie cookie = new Cookie("sort", "title");
+            cookie.setMaxAge(30 * 24 * 60 * 60);
+            response.addCookie(cookie);
+        }
+        else if(id==2){
+            Cookie cookie = new Cookie("sort", "titledesc");
+            cookie.setMaxAge(30 * 24 * 60 * 60);
+            response.addCookie(cookie);
+        }
+        else if(id==3){
+            Cookie cookie = new Cookie("sort", "category");
+            cookie.setMaxAge(30 * 24 * 60 * 60);
+            response.addCookie(cookie);
+        }
+        else if(id==4){
+            Cookie cookie = new Cookie("sort", "categorydesc");
+            cookie.setMaxAge(30 * 24 * 60 * 60);
+            response.addCookie(cookie);
+        }
+        else if(id==5){
+            Cookie cookie = new Cookie("sort", "date");
+            cookie.setMaxAge(30 * 24 * 60 * 60);
+            response.addCookie(cookie);
+        }
+        else if(id==6){
+            Cookie cookie = new Cookie("sort", "datedesc");
+            cookie.setMaxAge(30 * 24 * 60 * 60);
+            response.addCookie(cookie);
+        }
     }
 
     @GetMapping("/remind")
