@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("/categories")
 public class RestController {
 
-    private final List<String>  categories = Arrays.asList("Informacje","Sport","Piłka nożna");
+    private final List<String>  categories = Arrays.asList("handball","Sport","football","news","lifestyle","books");
 
     @GetMapping(produces = {"application/json","application/xml"})
     @ResponseStatus(HttpStatus.OK)
