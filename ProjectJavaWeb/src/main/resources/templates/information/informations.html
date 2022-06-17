@@ -16,6 +16,33 @@
         </div>
     </div>
 
+    <div class="container">
+        <div class="row align-items-end">
+            <div class="col-4">
+                <form action="#" th:href="${'informations'}" style="max-width: 600px; margin: 0 auto;">
+                    <div class="form-group">
+                        <label class="col-form-label" >Sort by: </label>
+                        <select class="form-control d-inline-block" name="by">
+                            <option value=1>Title ascending</option>
+                            <option value=2>Title descending</option>
+                            <option value=3>Category ascending</option>
+                            <option value=4>Category descending</option>
+                            <option value=5>Oldest added date</option>
+                            <option value=6>Youngest added date</option>
+                        </select>
+                        <label class="col-form-label" >Filter by: </label>
+                        <select class="form-control d-inline-block" name="name">
+                            <option value="">Filter by category</option>
+                            <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>
+                        </select>
+                        <label class="col-form-label">Filter by date</label>
+                        <input type="date" class="form-control"  id="date" name="date">
+                        <input class="btn btn-primary w-100" type="submit" value="Filter" style="margin-top: 10px;"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     <div style="color: #333333" class="row">
         <div class="col-6 p-3" th:each="information : ${informations}">
             <div class="card">
