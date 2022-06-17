@@ -2,6 +2,7 @@ package pl.team.marking.projectjavaweb.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -10,8 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.client.RestTemplate;
+import pl.team.marking.projectjavaweb.service.CustomLogoutHandler;
 import pl.team.marking.projectjavaweb.service.RemindService;
 
 import static pl.team.marking.projectjavaweb.entity.UserApp.*;
@@ -22,16 +26,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final RemindService remindService;
+    private final LogoutHandler logoutHandler;
 
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 
-    public SecurityConfiguration(UserDetailsService userDetailsService, RemindService aRemindService) {
+    public SecurityConfiguration(UserDetailsService userDetailsService, RemindService aRemindService, CustomLogoutHandler aLogoutHandler) {
         super();
         this.userDetailsService = userDetailsService;
         this.remindService = aRemindService;
+        logoutHandler = aLogoutHandler;
     }
 
     @Override
@@ -61,9 +67,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .failureUrl("/login-error")
+
                 .defaultSuccessUrl("/index_with_reminder?just_logged", true)
                 .and()
                 .logout()
+                .addLogoutHandler(logoutHandler)
                 .invalidateHttpSession(true).clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login?logout");

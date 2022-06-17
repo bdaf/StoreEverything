@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import pl.team.marking.projectjavaweb.entity.UserApp;
 import pl.team.marking.projectjavaweb.service.MyUserDetailsService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Controller

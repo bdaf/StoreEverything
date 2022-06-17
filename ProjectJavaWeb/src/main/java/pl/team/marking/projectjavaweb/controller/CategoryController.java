@@ -14,26 +14,32 @@ import pl.team.marking.projectjavaweb.entity.Category;
 import pl.team.marking.projectjavaweb.entity.MyUserDetails;
 import pl.team.marking.projectjavaweb.entity.UserApp;
 import pl.team.marking.projectjavaweb.repository.CategoryRepository;
-import pl.team.marking.projectjavaweb.repository.UserRepository;
+import pl.team.marking.projectjavaweb.service.CategoryService;
 import pl.team.marking.projectjavaweb.service.MyUserDetailsService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/categories")
 public class CategoryController {
 
-    final CategoryRepository categoryRepository;
+    final CategoryService categoryService;
     final MyUserDetailsService myUserDetailsService;
     final RestConnector restConnector;
+    public static final String CATEGORIES_TO_SAVE = "categories_to_save";
 
-    public CategoryController(CategoryRepository aCategoryRepository, MyUserDetailsService aMyUserDetailsService,RestConnector restConnector) {
-        this.categoryRepository = aCategoryRepository;
+    public CategoryController(CategoryService aCategoryService, MyUserDetailsService aMyUserDetailsService,RestConnector restConnector) {
+        this.categoryService = aCategoryService;
         this.myUserDetailsService = aMyUserDetailsService;
         this.restConnector = restConnector;
     }
 
     @GetMapping
-    public String getCategories(@AuthenticationPrincipal MyUserDetails userDetails, Model model) {
-        model.addAttribute("categories", categoryRepository.findAll());
+    public String getCategories(@AuthenticationPrincipal MyUserDetails userDetails, Model model, HttpServletRequest request) {
+        model.addAttribute("categories", categoryService.getAllWithSession(request.getSession()));
         String login = userDetails.getUsername();
         UserApp user = myUserDetailsService.getUserByLogin(login);
         model.addAttribute("currentUser", user);
@@ -43,18 +49,25 @@ public class CategoryController {
     @GetMapping("/add")
     public String addCategory(Model model) {
         model.addAttribute("category", new Category());
-        System.out.println("Hello");
         return "category/add";
     }
 
     @PostMapping("/add_post")
-    public String addCategory(@ModelAttribute("category") Category category) throws JsonProcessingException {
-        System.out.println("hello2");
+    public String addCategory(@ModelAttribute("category") Category category, HttpServletRequest request) throws JsonProcessingException {
         if(restConnector.checkCategory(category.getName())) {
-            categoryRepository.save(category);
+            addCategoryToSession(category, request);
             return "redirect:/categories";
         }
-        System.out.println("hello3");
         return "category/error";
+    }
+
+    private void addCategoryToSession(Category category, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        List<Category> categoriesFromSession = (List<Category>) session.getAttribute(CATEGORIES_TO_SAVE);
+        if(categoriesFromSession == null){
+            categoriesFromSession = new ArrayList<>();
+        }
+        categoriesFromSession.add(category);
+        session.setAttribute(CATEGORIES_TO_SAVE, categoriesFromSession);
     }
 }

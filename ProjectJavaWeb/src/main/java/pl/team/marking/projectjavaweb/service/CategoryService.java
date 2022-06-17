@@ -8,4 +8,6 @@ import java.util.List;
 public interface CategoryService {
     List<Category> getAll();
     List<Category> getAllWithSession(HttpSession aSession);
+
+    void save(Category aCategory);
 }
