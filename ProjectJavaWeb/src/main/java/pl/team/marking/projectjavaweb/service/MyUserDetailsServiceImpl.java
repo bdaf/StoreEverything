@@ -23,6 +23,7 @@ public class MyUserDetailsServiceImpl implements MyUserDetailsService {
         this.userRepository = userRepository;
     }
 
+
     @Override
     public UserDetails loadUserByUsername(String aUsername) throws UsernameNotFoundException {
         Optional<UserApp> user = userRepository.findUserByLogin(aUsername);
@@ -32,7 +33,7 @@ public class MyUserDetailsServiceImpl implements MyUserDetailsService {
 
     @Override
     public void save(UserApp aUserApp) {
-        // saving to repository
+
         userRepository.save(aUserApp);
     }
 

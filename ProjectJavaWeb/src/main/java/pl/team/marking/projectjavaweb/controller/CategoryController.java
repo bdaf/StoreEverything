@@ -11,25 +11,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import pl.team.marking.projectjavaweb.entity.Category;
 import pl.team.marking.projectjavaweb.entity.MyUserDetails;
 import pl.team.marking.projectjavaweb.entity.UserApp;
-import pl.team.marking.projectjavaweb.repository.CategoryRepository;
-import pl.team.marking.projectjavaweb.repository.UserRepository;
+import pl.team.marking.projectjavaweb.service.CategoryService;
 import pl.team.marking.projectjavaweb.service.MyUserDetailsService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/categories")
 public class CategoryController {
 
-    final CategoryRepository categoryRepository;
+    final CategoryService categoryService;
     final MyUserDetailsService myUserDetailsService;
 
-    public CategoryController(CategoryRepository aCategoryRepository, MyUserDetailsService aMyUserDetailsService) {
-        this.categoryRepository = aCategoryRepository;
+    public CategoryController(CategoryService aCategoryService, MyUserDetailsService aMyUserDetailsService) {
+        this.categoryService = aCategoryService;
         this.myUserDetailsService = aMyUserDetailsService;
     }
 
     @GetMapping
-    public String getCategories(@AuthenticationPrincipal MyUserDetails userDetails, Model model) {
-        model.addAttribute("categories", categoryRepository.findAll());
+    public String getCategories(@AuthenticationPrincipal MyUserDetails userDetails, Model model, HttpServletRequest request) {
+        model.addAttribute("categories", categoryService.getAllWithSession(request.getSession()));
         String login = userDetails.getUsername();
         UserApp user = myUserDetailsService.getUserByLogin(login);
         model.addAttribute("currentUser", user);
@@ -44,10 +48,17 @@ public class CategoryController {
     }
 
     @PostMapping("/add_post")
-    public String addCategory(@ModelAttribute("category") Category category) {
-        System.out.println("hello2");
-        categoryRepository.save(category);
-        System.out.println("hello3");
+    public String addCategory(@ModelAttribute("category") Category category, HttpServletRequest request) {
+        addCategoryToSession(category, request);
         return "redirect:/categories";
+    }
+
+    private void addCategoryToSession(Category category, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        List<Category> categoriesFromSession = (List<Category>) session.getAttribute("categories");
+        if(categoriesFromSession == null){
+            categoriesFromSession = new ArrayList<>();
+        }
+        categoriesFromSession.add(category);
     }
 }
