@@ -14,53 +14,7 @@ import java.util.Optional;
 public interface InformationRepository extends JpaRepository<Information, Long> {
     List<Information> findByUser(UserApp user);
 
-    List<Information> findByUserOrderByTitle(UserApp user);
-
-    List<Information> findByUserAndCategoryNameOrderByTitle(UserApp user, String name);
-
-    List<Information> findByUserAndCategoryNameAndAddingDateOrderByTitle(UserApp user, String name, String addingDate);
-
-    List<Information> findByUserAndAddingDateOrderByTitle(UserApp user, String addingDate);
-
-    List<Information> findByUserOrderByTitleDesc(UserApp user);
-
-    List<Information> findByUserAndCategoryNameOrderByTitleDesc(UserApp user, String name);
-
-    List<Information> findByUserAndCategoryNameAndAddingDateOrderByTitleDesc(UserApp user, String name, String addingDate);
-
-    List<Information> findByUserAndAddingDateOrderByTitleDesc(UserApp user, String addingDate);
-
-    List<Information> findByUserOrderByAddingDate(UserApp user);
-
-    List<Information> findByUserAndCategoryNameOrderByAddingDate(UserApp user, String name);
-
-    List<Information> findByUserAndCategoryNameAndAddingDateOrderByAddingDate(UserApp user, String name, String addingDate);
-
-    List<Information> findByUserAndAddingDateOrderByAddingDate(UserApp user, String addingDate);
-
-    List<Information> findByUserOrderByAddingDateDesc(UserApp user);
-
-    List<Information> findByUserAndCategoryNameOrderByAddingDateDesc(UserApp user, String name);
-
-    List<Information> findByUserAndCategoryNameAndAddingDateOrderByAddingDateDesc(UserApp user, String name, String addingDate);
-
-    List<Information> findByUserAndAddingDateOrderByAddingDateDesc(UserApp user, String addingDate);
-
-    List<Information> findByUserOrderByCategory(UserApp user);
-
-    List<Information> findByUserAndCategoryNameOrderByCategory(UserApp user, String name);
-
-    List<Information> findByUserAndCategoryNameAndAddingDateOrderByCategory(UserApp user, String name, String addingDate);
-
-    List<Information> findByUserAndAddingDateOrderByCategory(UserApp user, String addingDate);
-
-    List<Information> findByUserOrderByCategoryDesc(UserApp user);
-
-    List<Information> findByUserAndCategoryNameOrderByCategoryDesc(UserApp user, String name);
-
-    List<Information> findByUserAndCategoryNameAndAddingDateOrderByCategoryDesc(UserApp user, String name, String addingDate);
-
-    List<Information> findByUserAndAddingDateOrderByCategoryDesc(UserApp user, String addingDate);
+    List<Information> findByUserAndCategoryName(UserApp user,String name);
 
     @Query(value = "SELECT i " +
             "FROM Information i " +

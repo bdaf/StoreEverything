@@ -47,9 +47,26 @@ public class InformationController {
         String login = userDetails.getUsername();
         UserApp user = myUserDetailsService.getUserByLogin(login);
         List<Information> informationList = informationRepository.findByUser(user);
-        if(!name.equals(""))
-            informationList = informationList.stream().filter(i->i.getCategory().getName().equals(name)).collect(Collectors.toList());
-        LocalDate currentDate = LocalDate.now();
+        if(!name.equals("")) {
+         if(name.equals("MostPopular")){
+            Map<String,Integer> most = new HashMap<>();
+            for(Information i : informationList){
+                if (!most.containsKey(i.getCategory().getName())){
+                    most.put(i.getCategory().getName(), 1);
+                }
+                else {
+                    int currentCount = most.get(i.getCategory().getName());
+                    currentCount++;
+                    most.put(i.getCategory().getName(), currentCount);
+                }
+            }
+            String mostPopular = most.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey();
+            informationList = informationRepository.findByUserAndCategoryName(user,mostPopular);
+         }
+            else
+            informationList = informationList.stream().filter(i -> i.getCategory().getName().equals(name)).collect(Collectors.toList());
+        }
+            LocalDate currentDate = LocalDate.now();
         LocalDate nextDate;
 
         if(!date.equals("")) {
@@ -69,11 +86,11 @@ public class InformationController {
                 else if(id.equals("3"))
                     informationList = informationList.stream().sorted(Comparator.comparing(d -> d.getCategory().getName())).collect(Collectors.toList());
                 else if(id.equals("4"))
-                    informationList = informationList.stream().sorted(Comparator.comparing(Information::getTitle).reversed()).collect(Collectors.toList());
+                    informationList = informationList.stream().sorted(Comparator.comparing((Information d) -> d.getCategory().getName()).reversed()).collect(Collectors.toList());
                 else if(id.equals("5"))
-                    informationList = informationList.stream().sorted(Comparator.comparing(Information::getAddingDate)).collect(Collectors.toList());
-                else if(id.equals("6"))
                     informationList = informationList.stream().sorted(Comparator.comparing(Information::getAddingDate).reversed()).collect(Collectors.toList());
+                else if(id.equals("6"))
+                    informationList = informationList.stream().sorted(Comparator.comparing(Information::getAddingDate)).collect(Collectors.toList());
             }
             else {
                 for (Cookie c : request.getCookies()) {
@@ -84,164 +101,20 @@ public class InformationController {
                     } else if (c.getName().equals("sort") && c.getValue().equals("category") && name.equals("") && date.equals("")) {
                         informationList = informationList.stream().sorted(Comparator.comparing(d -> d.getCategory().getName())).collect(Collectors.toList());
                     } else if (c.getName().equals("sort") && c.getValue().equals("categorydesc") && name.equals("") && date.equals("")) {
-                        informationList = informationList.stream().sorted(Comparator.comparing(Information::getTitle).reversed()).collect(Collectors.toList());
+                        informationList = informationList.stream().sorted(Comparator.comparing((Information d) -> d.getCategory().getName()).reversed()).collect(Collectors.toList());
                     } else if (c.getName().equals("sort") && c.getValue().equals("date") && name.equals("") && date.equals("")) {
                         informationList = informationList.stream().sorted(Comparator.comparing(Information::getAddingDate)).collect(Collectors.toList());
                     } else if (c.getName().equals("sort") && c.getValue().equals("datedesc") && name.equals("") && date.equals("")) {
                         informationList = informationList.stream().sorted(Comparator.comparing(Information::getAddingDate).reversed()).collect(Collectors.toList());
                     }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("title")&&!name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameOrderByTitle(user,name);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("titledesc")&&!name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameOrderByTitleDesc(user,name);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("category")&&!name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameOrderByCategory(user,name);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("categorydesc")&&!name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameOrderByCategoryDesc(user,name);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("date")&&!name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameOrderByAddingDate(user,name);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("datedesc")&&!name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameOrderByAddingDateDesc(user,name);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("title")&&!date.equals("")&&name.equals("")){
-//                informationList = informationRepository.findByUserAndAddingDateOrderByTitle(user,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("titledesc")&&!date.equals("")&&name.equals("")){
-//                informationList = informationRepository.findByUserAndAddingDateOrderByTitleDesc(user,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("category")&&!date.equals("")&&name.equals("")){
-//                informationList = informationRepository.findByUserAndAddingDateOrderByCategory(user,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("categorydesc")&&!date.equals("")&&name.equals("")){
-//                informationList = informationRepository.findByUserAndAddingDateOrderByCategoryDesc(user,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("date")&&!date.equals("")&&name.equals("")){
-//                informationList = informationRepository.findByUserAndAddingDateOrderByAddingDate(user,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("datedesc")&&!date.equals("")&&name.equals("")){
-//                informationList = informationRepository.findByUserAndAddingDateOrderByAddingDateDesc(user,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("title")&&!name.equals("")&&!date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameAndAddingDateOrderByTitle(user,name,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("titledesc")&&!name.equals("")&&!date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameAndAddingDateOrderByTitleDesc(user,name,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("category")&&!name.equals("")&&!date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameAndAddingDateOrderByCategory(user,name,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("categorydesc")&&!name.equals("")&&!date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameAndAddingDateOrderByCategoryDesc(user,name,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("date")&&!name.equals("")&&!date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameAndAddingDateOrderByAddingDate(user,name,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("datedesc")&&!name.equals("")&&!date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameAndAddingDateOrderByAddingDateDesc(user,name,date);
-//            }
                 }
             }
-
 
         model.addAttribute("informations", informationList);
         model.addAttribute("categories",categoriesList);
         model.addAttribute("isShare", false);
         return "information/informations";
     }
-//    @GetMapping
-//    public String getAllMyInformation(@RequestParam(name = "by",required = false,defaultValue = "1") String id, @RequestParam(name = "name",required = false,defaultValue = "") String name, @RequestParam(name = "date", required = false,defaultValue = "") String date, @AuthenticationPrincipal MyUserDetails userDetails, Model model, HttpServletRequest request, HttpServletResponse response) {
-//        String login = userDetails.getUsername();
-//        UserApp user = myUserDetailsService.getUserByLogin(login);
-//        System.out.println("data"+ date);
-//        List<Information> informationList = informationRepository.findByUserOrderByTitle(user);
-//        List<Category> categoriesList = categoryRepository.findAll();
-//        for (Cookie c : request.getCookies()) {
-//            if (c.getName().equals("sort")&&c.getValue().equals("title")&&name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserOrderByTitle(user);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("titledesc")&&name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserOrderByTitleDesc(user);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("category")&&name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserOrderByCategory(user);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("categorydesc")&&name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserOrderByCategoryDesc(user);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("date")&&name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserOrderByAddingDate(user);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("datedesc")&&name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserOrderByAddingDateDesc(user);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("title")&&!name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameOrderByTitle(user,name);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("titledesc")&&!name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameOrderByTitleDesc(user,name);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("category")&&!name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameOrderByCategory(user,name);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("categorydesc")&&!name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameOrderByCategoryDesc(user,name);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("date")&&!name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameOrderByAddingDate(user,name);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("datedesc")&&!name.equals("")&&date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameOrderByAddingDateDesc(user,name);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("title")&&!date.equals("")&&name.equals("")){
-//                informationList = informationRepository.findByUserAndAddingDateOrderByTitle(user,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("titledesc")&&!date.equals("")&&name.equals("")){
-//                informationList = informationRepository.findByUserAndAddingDateOrderByTitleDesc(user,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("category")&&!date.equals("")&&name.equals("")){
-//                informationList = informationRepository.findByUserAndAddingDateOrderByCategory(user,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("categorydesc")&&!date.equals("")&&name.equals("")){
-//                informationList = informationRepository.findByUserAndAddingDateOrderByCategoryDesc(user,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("date")&&!date.equals("")&&name.equals("")){
-//                informationList = informationRepository.findByUserAndAddingDateOrderByAddingDate(user,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("datedesc")&&!date.equals("")&&name.equals("")){
-//                informationList = informationRepository.findByUserAndAddingDateOrderByAddingDateDesc(user,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("title")&&!name.equals("")&&!date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameAndAddingDateOrderByTitle(user,name,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("titledesc")&&!name.equals("")&&!date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameAndAddingDateOrderByTitleDesc(user,name,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("category")&&!name.equals("")&&!date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameAndAddingDateOrderByCategory(user,name,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("categorydesc")&&!name.equals("")&&!date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameAndAddingDateOrderByCategoryDesc(user,name,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("date")&&!name.equals("")&&!date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameAndAddingDateOrderByAddingDate(user,name,date);
-//            }
-//            else if (c.getName().equals("sort")&&c.getValue().equals("datedesc")&&!name.equals("")&&!date.equals("")){
-//                informationList = informationRepository.findByUserAndCategoryNameAndAddingDateOrderByAddingDateDesc(user,name,date);
-//            }
-//            }
-//
-//        addCookie(id, response);
-//
-//        model.addAttribute("informations", informationList);
-//        model.addAttribute("categories",categoriesList);
-//        model.addAttribute("isShare", false);
-//        return "information/informations";
-//    }
 
     private void addCookie(String id, HttpServletResponse response) {
         if(id.equals("1")){

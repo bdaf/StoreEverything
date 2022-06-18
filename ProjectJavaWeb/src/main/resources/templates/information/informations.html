@@ -32,7 +32,8 @@
                         </select>
                         <label class="col-form-label" >Filter by: </label>
                         <select class="form-control d-inline-block" name="name">
-                            <option value="">Filter by category</option>
+                            <option value="">Filter by category:</option>
+                            <option value="MostPopular">Most popular</option>
                             <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>
                         </select>
                         <label class="col-form-label">Filter by date</label>
