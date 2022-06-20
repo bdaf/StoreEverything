@@ -45,7 +45,9 @@ public class RegistrationController {
         aUserApp.setPassword(encodedPassword);
 
         // saving to database
-        userService.save(aUserApp);
+        if(userService.save(aUserApp) == -1){
+            return "redirect:/login?same_exists";
+        }
         return "redirect:/login?registered";
     }
 }

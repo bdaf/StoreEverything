@@ -6,7 +6,7 @@ import pl.team.marking.projectjavaweb.entity.UserApp;
 import java.util.List;
 
 public interface MyUserDetailsService extends UserDetailsService {
-    void save(UserApp aUserApp);
+    int save(UserApp aUserApp);
 
     UserApp getUserByLogin(String aLogin);
     List<UserApp> getAllUsers();

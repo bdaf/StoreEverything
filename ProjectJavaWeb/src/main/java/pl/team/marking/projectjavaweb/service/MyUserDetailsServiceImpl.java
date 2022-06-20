@@ -32,9 +32,13 @@ public class MyUserDetailsServiceImpl implements MyUserDetailsService {
     }
 
     @Override
-    public void save(UserApp aUserApp) {
-
-        userRepository.save(aUserApp);
+    public int save(UserApp aUserApp) {
+        Optional<UserApp> userByLogin = userRepository.findUserByLogin(aUserApp.getLogin());
+        if(userByLogin.isEmpty()){
+            userRepository.save(aUserApp);
+            return 0;
+        }
+        return -1;
     }
 
     @Override
