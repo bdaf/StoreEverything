@@ -16,11 +16,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class InformationDTO {
 
-    @NotBlank(message = "Login can't be blank!")
+    @NotBlank(message = "Title can't be blank!")
     @Size(min = 3, max = 20, message = "Title has to have from 3 to 20 characters.")
     private String title;
 
-    @NotBlank(message = "Login can't be blank!")
+    @NotBlank(message = "Content can't be blank!")
     @Size(min = 5, max = 500, message = "Content has to have from 5 to 500 characters.")
     private String content;
 

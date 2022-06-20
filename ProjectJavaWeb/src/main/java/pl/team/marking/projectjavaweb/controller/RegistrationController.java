@@ -44,7 +44,7 @@ public class RegistrationController {
         String encodedPassword = passwordEncoder.encode(aUserApp.getPassword());
         aUserApp.setPassword(encodedPassword);
 
-        // saving to database
+        // saving to database if there isn't another user with same name
         if(userService.save(aUserApp) == -1){
             return "redirect:/login?same_exists";
         }
