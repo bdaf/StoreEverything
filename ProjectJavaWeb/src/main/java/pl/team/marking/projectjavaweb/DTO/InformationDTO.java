@@ -26,7 +26,7 @@ public class InformationDTO {
 
     @Future(message = "Remind date must be in future.")
     @NotNull(message = "Remind date can't be blank!")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate remindDate;
 
     @NotNull(message = "Category can't be blank!")
